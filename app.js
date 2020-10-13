@@ -34,9 +34,10 @@ db.authenticate()
 var appRoutes = require('./routes/app');
 var contactosRoutes = require('./routes/contactos');
 var usuariosRoutes = require('./routes/usuarios');
-
+var loginRoutes = require('./routes/login');
 
 //Rutas -> Middleware
 app.use('/contactos', contactosRoutes);
 app.use('/usuarios', usuariosRoutes);
+app.use('/login', loginRoutes);
 app.use('/', appRoutes);

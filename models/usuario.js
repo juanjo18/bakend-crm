@@ -4,7 +4,7 @@ var Usuario = db.define('usuarios', {
     id_usuario: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
     nombre:  { type: Sequelize.STRING, allowNull: false},
     email: { type: Sequelize.STRING, allowNull: false},
-    contraseña:  { type: Sequelize.STRING, allowNull: false},
+    password:  { type: Sequelize.STRING, allowNull: false},
     rol: {type: Sequelize.STRING, allowNull: false}
 },
 { 

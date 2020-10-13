@@ -36,14 +36,16 @@ app.get('/', (req, res, next) => {
 // ==========================================
 app.post('/',  (req, res)=>{
     var body = req.body;
+
     Usuario.create({
         nombre: body.nombre,
         email: body.email,
-        contraseña: bcrypt.hashSync(body.password, 10),
+        password: bcrypt.hashSync(body.password, 10),
         rol: body.rol
     })
     .then(usuario =>{
 		res.status(200).json({
+            usuario: usuario,
 			ok: 'true',
 			mensaje: 'Usuario creado bien'
 		})
