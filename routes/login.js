@@ -23,11 +23,11 @@ app.post('/', (req, resp) => {
                 })
             }
             else{
-                var token = jwt.sign({ usuario: usuario.dataValues.id_usuario}, SEED, {expiresIn: 900}) 
+                var token = jwt.sign({ usuario: usuario.dataValues.id_usuario}, SEED, {expiresIn: 1800}) 
                 resp.status(200).json({
                     ok: 'true',
                     usuario: usuario,
-                    token: token
+                    token
                 })
             }
         }

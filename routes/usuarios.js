@@ -2,13 +2,14 @@ const { json } = require('body-parser');
 var express = require('express');
 var app = express();
 var Usuario = require('../models/usuario');
+var auth = require('../middlewares/autenticacion')
 
 // Par encriptar la contraseña
 var bcrypt = require('bcryptjs');
 // var jwt = require('jsonwebtoken');
 
 
-app.get('/', (req, res, next) => {
+app.get('/',  (req, res, next) => {
     console.log("Estas en el backp");
     
     Usuario.findAndCountAll({
@@ -34,7 +35,7 @@ app.get('/', (req, res, next) => {
 // ==========================================
 //  Create a new user
 // ==========================================
-app.post('/',  (req, res)=>{
+app.post('/',  auth.verificaToken, (req, res)=>{
     var body = req.body;
 
     Usuario.create({
