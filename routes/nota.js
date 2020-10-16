@@ -1,123 +1,114 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Negocio = require('../models/negocio');
+var Nota = require('../models/nota');
 
 // ==========================================
-//  Obtener todos los negocios
+//  Obtener todas las notas
 // ==========================================
+
 app.get('/', (req, res) => {
 
-    Negocio.findAll().then(negocios => {
-        if (negocios) {
+    Nota.findAll().then(notas => {
+        if (notas) {
             res.status(200).json({
                 ok: true,
-                negocios: negocios
+                notas: notas
             })
         } else {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al obtener negocios'
+                mensaje: 'error al recuperar notas'
             })
         }
     })
 });
 
 // ==========================================
-//  Obtener un negocio
+//  Obtener una nota
 // ==========================================
 app.get('/:id', (req, res) => {
 
     var id = req.params.id;
-    Negocio.findOne({
+    Nota.findOne({
             where: {
-                id_negocio: id
+                id_nota: id
             }
         })
-        .then(negocio => {
-            if (negocio) {
+        .then(nota => {
+            if (nota) {
                 res.status(200).json({
                     ok: 'true',
-                    negocio: negocio
+                    nota: nota
                 });
             } else {
                 return res.status(400).json({
                     ok: 'false',
-                    mensaje: 'No existe el negocio'
+                    mensaje: 'No exite esa nota'
                 });
             }
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al buscar el negocio',
+                mensaje: 'Error al buscar nota',
                 error: err
             });
         })
 });
 
-
 // ==========================================
-//  Agregar un negocio 
+//  crear una nota
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
 
-    Negocio.create({
-            nombre: body.nombre,
-            industria: body.industria,
-            ciudad: body.ciudad,
-            ingresos_anuales: body.ingresos,
-            tipo_cliente: body.tipo,
-            no_empleados: body.empleados,
-            descripcion: body.descripcion,
-            no_telefono: body.telefono,
-            zona_horaria: body.zona,
-            pagina_corporativa: body.pagina,
-            propietario_registro: body.propietario,
-            estado_region: body.estado,
-            codigo_postal: body.codigo
+    Nota.create({
+            comentario: body.descripcion,
+            fkusuario: body.id
+
         })
-        .then(negocio => {
+        .then(nota => {
             res.status(200).json({
-                usuario: negocio,
+                nota: nota,
                 ok: 'true',
-                mensaje: 'Negocio agregado'
+                mensaje: 'Nota agregada'
             })
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al agregar empresa',
+                mensaje: 'Error al agregar nota',
                 errors: err
             })
         })
 });
 
+
 // ==========================================
-//  Borra un negocio
+//  Borrar nota
 // ==========================================
 
 app.delete('/:id', (req, res, next) => {
 
     var id = req.params.id;
 
-    Negocio.destroy({
+    Nota.destroy({
             where: {
-                id_negocio: id
+                id_nota: id
             }
         })
         .then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio eliminado',
+                mensaje: 'Nota eliminada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al eliminar negocio',
+                mensaje: 'Error al eliminar nota',
                 error: err
             })
         })
@@ -125,36 +116,31 @@ app.delete('/:id', (req, res, next) => {
 
 
 // ==========================================
-//  Actualizar un negocio
+//  Actualizar nota
 // ==========================================
 
 app.put('/:id', (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
 
-    Negocio.update({
-
-            nombre: body.nombre,
-            apellido: body.apellido,
-            correo: body.correo,
-            telefono: body.telefono,
-            departamento: body.departamento,
-            propietario_registro: body.pripietario
+    Nota.update({
+            comentario: body.descripcion,
+            fkusuario: body.id
         }, {
             where: {
-                id_negocio: id
+                id_nota: id
             }
         }).then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio actualizado',
+                mensaje: 'Nota actualizada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al actualizar negocio',
+                mensaje: 'Error al actualizar nota',
                 error: err
             })
         })
