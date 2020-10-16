@@ -1,163 +1,164 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Negocio = require('../models/negocio');
+var Rreuniones = require('../models/registrarReuniones');
+
 
 // ==========================================
-//  Obtener todos los negocios
+//  Obtener Reuniones
 // ==========================================
+
 app.get('/', (req, res) => {
 
-    Negocio.findAll().then(negocios => {
-        if (negocios) {
+    Rreuniones.findAll().then(reuniones => {
+        if (reuniones) {
             res.status(200).json({
                 ok: true,
-                negocios: negocios
+                reuniones: reuniones
             })
         } else {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al obtener negocios'
+                mensaje: 'Error al recuperar reuniones'
             })
         }
     })
 });
 
 // ==========================================
-//  Obtener un negocio
+//  Obtener una reunion 
 // ==========================================
 app.get('/:id', (req, res) => {
 
     var id = req.params.id;
-    Negocio.findOne({
+    Rreuniones.findOne({
             where: {
-                id_negocio: id
+                id_regisreunion: id
             }
         })
-        .then(negocio => {
-            if (negocio) {
+        .then(reunion => {
+            if (reunion) {
                 res.status(200).json({
                     ok: 'true',
-                    negocio: negocio
+                    reunion: reunion
                 });
             } else {
                 return res.status(400).json({
                     ok: 'false',
-                    mensaje: 'No existe el negocio'
+                    mensaje: 'No exite esa reunión'
                 });
             }
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al buscar el negocio',
+                mensaje: 'Error al buscar reunión',
                 error: err
             });
         })
 });
 
-
 // ==========================================
-//  Agregar un negocio 
+//  Agregar reunion
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
 
-    Negocio.create({
-            nombre: body.nombre,
-            industria: body.industria,
-            ciudad: body.ciudad,
-            ingresos_anuales: body.ingresos,
-            tipo_cliente: body.tipo,
-            no_empleados: body.empleados,
-            descripcion: body.descripcion,
-            no_telefono: body.telefono,
-            zona_horaria: body.zona,
-            pagina_corporativa: body.pagina,
-            propietario_registro: body.propietario,
-            estado_region: body.estado,
-            codigo_postal: body.codigo
+    Rreuniones.create({
+
+            descripcion: body.descripcionReunion,
+            asistentes: body.asistentesReunion,
+            resultado: body.resultadoReunion,
+            fecha: body.fechaReunion,
+            hora: body.horaReunion,
+            duracion: body.duracionReunion,
+            fkusuario: body.id
+
+
         })
-        .then(negocio => {
+        .then(reunion => {
             res.status(200).json({
-                usuario: negocio,
+                reunion: reunion,
                 ok: 'true',
-                mensaje: 'Negocio agregado'
+                mensaje: 'Reunión agregada'
             })
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al agregar empresa',
+                mensaje: 'Error al agregar reunión',
                 errors: err
             })
         })
 });
 
+
 // ==========================================
-//  Borra un negocio
+//  Borrar reunion
 // ==========================================
 
 app.delete('/:id', (req, res, next) => {
 
     var id = req.params.id;
 
-    Negocio.destroy({
+    Rreuniones.destroy({
             where: {
-                id_negocio: id
+                id_regisreunion: id
             }
         })
         .then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio eliminado',
+                mensaje: 'Reunión eliminada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al eliminar negocio',
+                mensaje: 'Error al eliminar reunión',
                 error: err
             })
         })
 });
 
-
 // ==========================================
-//  Actualizar un negocio
+//  Actualizar reunion
 // ==========================================
 
 app.put('/:id', (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
 
-    Negocio.update({
+    Rreuniones.update({
+            descripcion: body.descripcionReunion,
+            asistentes: body.asistentesReunion,
+            resultado: body.resultadoReunion,
+            fecha: body.fechaReunion,
+            hora: body.horaReunion,
+            duracion: body.duracionReunion,
+            fkusuario: body.id
 
-            nombre: body.nombre,
-            apellido: body.apellido,
-            correo: body.correo,
-            telefono: body.telefono,
-            departamento: body.departamento,
-            propietario_registro: body.pripietario
         }, {
             where: {
-                id_negocio: id
+                id_regisreunion: id
             }
         }).then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio actualizado',
+                mensaje: 'Reunion actualizado',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al actualizar negocio',
+                mensaje: 'Error al actualizar reunión',
                 error: err
             })
         })
 });
+
+
 
 module.exports = app;

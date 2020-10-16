@@ -1,56 +1,61 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Negocio = require('../models/negocio');
+var EnviarCorreo = require('../models/enviarCorreo');
+
 
 // ==========================================
-//  Obtener todos los negocios
+//  Obtener correos enviados
 // ==========================================
+
+
 app.get('/', (req, res) => {
 
-    Negocio.findAll().then(negocios => {
-        if (negocios) {
+    EnviarCorreo.findAll().then(eCorreos => {
+        if (eCorreos) {
             res.status(200).json({
                 ok: true,
-                negocios: negocios
+                Correo: eCorreos
             })
         } else {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al obtener negocios'
+                mensaje: 'Error al recuperar correos'
             })
         }
     })
 });
 
+
 // ==========================================
-//  Obtener un negocio
+//  Obtener un correo enviado
 // ==========================================
+
 app.get('/:id', (req, res) => {
 
     var id = req.params.id;
-    Negocio.findOne({
+    EnviarCorreo.findOne({
             where: {
-                id_negocio: id
+                id_correo: id
             }
         })
-        .then(negocio => {
-            if (negocio) {
+        .then(eCorreo => {
+            if (eCorreo) {
                 res.status(200).json({
                     ok: 'true',
-                    negocio: negocio
+                    eCorreo: eCorreo
                 });
             } else {
                 return res.status(400).json({
                     ok: 'false',
-                    mensaje: 'No existe el negocio'
+                    mensaje: 'No exite ese correo'
                 });
             }
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al buscar el negocio',
+                mensaje: 'Error al buscar correo',
                 error: err
             });
         })
@@ -58,31 +63,24 @@ app.get('/:id', (req, res) => {
 
 
 // ==========================================
-//  Agregar un negocio 
+//  Crear correo enviado
 // ==========================================
+
 app.post('/', (req, res) => {
     var body = req.body;
 
-    Negocio.create({
-            nombre: body.nombre,
-            industria: body.industria,
-            ciudad: body.ciudad,
-            ingresos_anuales: body.ingresos,
-            tipo_cliente: body.tipo,
-            no_empleados: body.empleados,
-            descripcion: body.descripcion,
-            no_telefono: body.telefono,
-            zona_horaria: body.zona,
-            pagina_corporativa: body.pagina,
-            propietario_registro: body.propietario,
-            estado_region: body.estado,
-            codigo_postal: body.codigo
+    EnviarCorreo.create({
+            // descripcion: body.nombre,
+            // industria: body.industria,
+            // ciudad: body.ciudad,
+            //pendiente
+
         })
-        .then(negocio => {
+        .then(empresa => {
             res.status(200).json({
-                usuario: negocio,
+                usuario: empresa,
                 ok: 'true',
-                mensaje: 'Negocio agregado'
+                mensaje: 'EnviarCorreo agregada'
             })
         })
         .catch(err => {
@@ -95,29 +93,29 @@ app.post('/', (req, res) => {
 });
 
 // ==========================================
-//  Borra un negocio
+//  Borrar correo enviado
 // ==========================================
 
 app.delete('/:id', (req, res, next) => {
 
     var id = req.params.id;
 
-    Negocio.destroy({
+    EnviarCorreo.destroy({
             where: {
-                id_negocio: id
+                id_correo: id
             }
         })
         .then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio eliminado',
+                mensaje: 'EnviarCorreo eliminada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al eliminar negocio',
+                mensaje: 'Error al eliminar empresa',
                 error: err
             })
         })
@@ -125,39 +123,36 @@ app.delete('/:id', (req, res, next) => {
 
 
 // ==========================================
-//  Actualizar un negocio
+//  Actualizar correo, pero eso no se realiza. Creo que este método está de más
 // ==========================================
-
 app.put('/:id', (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
 
-    Negocio.update({
-
-            nombre: body.nombre,
-            apellido: body.apellido,
-            correo: body.correo,
-            telefono: body.telefono,
-            departamento: body.departamento,
-            propietario_registro: body.pripietario
+    EnviarCorreo.update({
+            // descripcion: body.nombre,
+            // industria: body.industria,
+            // ciudad: body.ciudad,
+            //pendiente
         }, {
             where: {
-                id_negocio: id
+                id_correo: id
             }
         }).then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio actualizado',
+                mensaje: 'Correo actualizado',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al actualizar negocio',
+                mensaje: 'Error al actualizar correo',
                 error: err
             })
         })
 });
+
 
 module.exports = app;

@@ -1,160 +1,153 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Negocio = require('../models/negocio');
+var Rllamada = require('../models/registrarLlamada');
 
 // ==========================================
-//  Obtener todos los negocios
+//  Obtener llamadas 
 // ==========================================
+
 app.get('/', (req, res) => {
 
-    Negocio.findAll().then(negocios => {
-        if (negocios) {
+    Rllamada.findAll().then(llamadas => {
+        if (llamadas) {
             res.status(200).json({
                 ok: true,
-                negocios: negocios
+                llamadas: llamadas
             })
         } else {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al obtener negocios'
+                mensaje: 'Error al recuperar llamadas'
             })
         }
     })
 });
 
 // ==========================================
-//  Obtener un negocio
+//  Obtener llamada
 // ==========================================
 app.get('/:id', (req, res) => {
 
     var id = req.params.id;
-    Negocio.findOne({
+    Rllamada.findOne({
             where: {
-                id_negocio: id
+                id_llamada: id
             }
         })
-        .then(negocio => {
-            if (negocio) {
+        .then(llamada => {
+            if (llamada) {
                 res.status(200).json({
                     ok: 'true',
-                    negocio: negocio
+                    llamada: llamada
                 });
             } else {
                 return res.status(400).json({
                     ok: 'false',
-                    mensaje: 'No existe el negocio'
+                    mensaje: 'No exite esa llamada'
                 });
             }
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al buscar el negocio',
+                mensaje: 'Error al buscar llamada',
                 error: err
             });
         })
 });
 
-
 // ==========================================
-//  Agregar un negocio 
+//  Crear llamada
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
 
-    Negocio.create({
-            nombre: body.nombre,
-            industria: body.industria,
-            ciudad: body.ciudad,
-            ingresos_anuales: body.ingresos,
-            tipo_cliente: body.tipo,
-            no_empleados: body.empleados,
-            descripcion: body.descripcion,
-            no_telefono: body.telefono,
-            zona_horaria: body.zona,
-            pagina_corporativa: body.pagina,
-            propietario_registro: body.propietario,
-            estado_region: body.estado,
-            codigo_postal: body.codigo
+    Rllamada.create({
+
+            descripcion: body.descripcionLlamada,
+            fkcontacto: body.contactadoLlamada,
+            fecha: body.fechaLlamada,
+            hora: body.horaLlamada,
+            resultado_llamada: body.resultadoLlamada,
+            fkusuario: body.id
         })
-        .then(negocio => {
+        .then(llamada => {
             res.status(200).json({
-                usuario: negocio,
+                llamada: llamada,
                 ok: 'true',
-                mensaje: 'Negocio agregado'
+                mensaje: 'Reunion agregada'
             })
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al agregar empresa',
+                mensaje: 'Error al agregar llamada',
                 errors: err
             })
         })
 });
 
+
 // ==========================================
-//  Borra un negocio
+//  Borrar Llamada
 // ==========================================
 
 app.delete('/:id', (req, res, next) => {
 
     var id = req.params.id;
 
-    Negocio.destroy({
+    Rllamada.destroy({
             where: {
-                id_negocio: id
+                id_llamada: id
             }
         })
         .then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio eliminado',
+                mensaje: 'Llamada eliminada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al eliminar negocio',
+                mensaje: 'Error al eliminar llamada',
                 error: err
             })
         })
 });
 
-
 // ==========================================
-//  Actualizar un negocio
+//  Actualizar llamada
 // ==========================================
 
 app.put('/:id', (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
 
-    Negocio.update({
-
-            nombre: body.nombre,
-            apellido: body.apellido,
-            correo: body.correo,
-            telefono: body.telefono,
-            departamento: body.departamento,
-            propietario_registro: body.pripietario
+    Rllamada.update({
+            descripcion: body.descripcionLlamada,
+            fkcontacto: body.contactadoLlamada,
+            fecha: body.fechaLlamada,
+            hora: body.horaLlamada,
+            resultado_llamada: body.resultadoLlamada,
+            fkusuario: body.id
         }, {
             where: {
-                id_negocio: id
+                id_llamada: id
             }
         }).then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Negocio actualizado',
+                mensaje: 'Llamada actualizada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al actualizar negocio',
+                mensaje: 'Error al actualizar llamada',
                 error: err
             })
         })
