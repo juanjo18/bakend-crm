@@ -4,7 +4,7 @@ var app = express();
 var Negocio = require('../models/negocio');
 
 // ==========================================
-//  Obtener todos los negocios
+//  Obtener todos los negocios, He actualizado solo hasta en Negocios, los elementos por debajo aun faltan
 // ==========================================
 app.get('/', (req, res) => {
 
@@ -64,19 +64,15 @@ app.post('/', (req, res) => {
     var body = req.body;
 
     Negocio.create({
-            nombre: body.nombre,
-            industria: body.industria,
-            ciudad: body.ciudad,
-            ingresos_anuales: body.ingresos,
-            tipo_cliente: body.tipo,
-            no_empleados: body.empleados,
-            descripcion: body.descripcion,
-            no_telefono: body.telefono,
-            zona_horaria: body.zona,
-            pagina_corporativa: body.pagina,
-            propietario_registro: body.propietario,
-            estado_region: body.estado,
-            codigo_postal: body.codigo
+            nombre_negocio: body.nombreNegocio,
+            etapas_negocio: body.etapaNegocio,
+            pipeline: body.pipelineNegocio,
+            cantidad: body.cantidadNegocio,
+            fkrelaciones: body.relacionesNegocio,
+            fkempresa: body.empresaNegocio,
+            fecha_cierre: body.cierreNegocio,
+
+            
         })
         .then(negocio => {
             res.status(200).json({
@@ -134,12 +130,14 @@ app.put('/:id', (req, res, next) => {
 
     Negocio.update({
 
-            nombre: body.nombre,
-            apellido: body.apellido,
-            correo: body.correo,
-            telefono: body.telefono,
-            departamento: body.departamento,
-            propietario_registro: body.pripietario
+        nombre_negocio: body.nombreNegocio,
+        etapas_negocio: body.etapaNegocio,
+        pipeline: body.pipelineNegocio,
+        cantidad: body.cantidadNegocio,
+        fkrelaciones: body.relacionesNegocio,
+        fkempresa: body.empresaNegocio,
+        fecha_cierre: body.cierreNegocio,
+
         }, {
             where: {
                 id_negocio: id

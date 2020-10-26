@@ -1,123 +1,115 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Rreuniones = require('../models/registrarReuniones');
+var NotasEmpresas = require('../models/notasEmpresas');
 var auth = require('../middlewares/autenticacion')
-
-
 // ==========================================
-//  Obtener Reuniones
+//  Obtener todas las notas
 // ==========================================
 
 app.get('/', (req, res) => {
 
-    Rreuniones.findAll().then(reuniones => {
-        if (reuniones) {
+    NotasEmpresas.findAll().then(notas => {
+        if (notas) {
             res.status(200).json({
                 ok: true,
-                reuniones: reuniones
+                notas: notas
             })
         } else {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al recuperar reuniones'
+                mensaje: 'error al recuperar notas'
             })
         }
     })
 });
 
 // ==========================================
-//  Obtener Reuniones con ID
-// ==========================================
-
-app.get('/:id', auth.verificaToken, (req, res) => {
-
-    var id = req.params.id;
-     console.log(id)
-    Rreuniones.findAll({
-        where:{
-            fkcontacto: id,
-        }
-    }).then(reuniones => {
-        if (reuniones) {
-            res.status(200).json({
-                ok: 'true',
-                mensaje: 'Solo reuniones del contacto',
-                reuniones: reuniones
-            })
-        }
-        else {
-            return res.status(500).json({
-                ok: 'false',
-                mensaje: "Error al recuperar las reuniones  "
-            })
-        }
-    })
-});
-
-
-// ==========================================
-//  Obtener una reunion 
+//  Obtener una nota
 // ==========================================
 // app.get('/:id', (req, res) => {
 
 //     var id = req.params.id;
-//     Rreuniones.findOne({
+//     NotasEmpresas.findOne({
 //             where: {
-//                 id_regisreunion: id
+//                 id_nota: id
 //             }
 //         })
-//         .then(reunion => {
-//             if (reunion) {
+//         .then(nota => {
+//             if (nota) {
 //                 res.status(200).json({
 //                     ok: 'true',
-//                     reunion: reunion
+//                     mensaje: 'solo una nota',
+//                     nota: nota
 //                 });
 //             } else {
 //                 return res.status(400).json({
 //                     ok: 'false',
-//                     mensaje: 'No exite esa reunión'
+//                     mensaje: 'No exite esa nota'
 //                 });
 //             }
 //         })
 //         .catch(err => {
 //             return res.status(500).json({
 //                 ok: 'false',
-//                 mensaje: 'Error al buscar reunión',
+//                 mensaje: 'Error al buscar nota',
 //                 error: err
 //             });
 //         })
 // });
 
+
+
 // ==========================================
-//  Agregar reunion
+//  ontener notas con id
+// ==========================================
+app.get('/:id', auth.verificaToken, (req, res) => {
+
+    var id = req.params.id;
+     console.log(id)
+    NotasEmpresas.findAll({
+        where:{
+            fkempresa: id,
+        }
+    }).then(notas => {
+        if (notas) {
+            res.status(200).json({
+                ok: 'true',
+                mensaje: 'Solo notas de la empresa',
+                notas: notas
+            })
+        }
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar las notas "
+            })
+        }
+    })
+});
+
+// ==========================================
+//  crear una nota
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
 
-    Rreuniones.create({
-
-            descripcion: body.descripcionReunion,
-            asistentes: body.asistentesReunion,
-            resultado: body.resultadoReunion,
-            fecha: body.fechaReunion,
-            hora: body.horaReunion,
-            duracion: body.duracionReunion,
+    NotasEmpresas.create({
+            comentario: body.descripcion,
             fkusuario: body.id
 
-
         })
-        .then(reunion => {
+        .then(nota => {
             res.status(200).json({
-                reunion: reunion,
+                nota: nota,
                 ok: 'true',
-                mensaje: 'Reunión agregada'
+                mensaje: 'Nota agregada'
             })
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al agregar reunión',
+                mensaje: 'Error al agregar nota',
                 errors: err
             })
         })
@@ -125,71 +117,64 @@ app.post('/', (req, res) => {
 
 
 // ==========================================
-//  Borrar reunion
+//  Borrar nota
 // ==========================================
 
 app.delete('/:id', (req, res, next) => {
 
     var id = req.params.id;
 
-    Rreuniones.destroy({
+    NotasEmpresas.destroy({
             where: {
-                id_regisreunion: id
+                id_nota: id
             }
         })
         .then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Reunión eliminada',
+                mensaje: 'Nota eliminada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al eliminar reunión',
+                mensaje: 'Error al eliminar nota',
                 error: err
             })
         })
 });
 
+
 // ==========================================
-//  Actualizar reunion
+//  Actualizar nota
 // ==========================================
 
 app.put('/:id', (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
 
-    Rreuniones.update({
-            descripcion: body.descripcionReunion,
-            asistentes: body.asistentesReunion,
-            resultado: body.resultadoReunion,
-            fecha: body.fechaReunion,
-            hora: body.horaReunion,
-            duracion: body.duracionReunion,
+    NotasEmpresas.update({
+            comentario: body.descripcion,
             fkusuario: body.id
-
         }, {
             where: {
-                id_regisreunion: id
+                id_nota: id
             }
         }).then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Reunion actualizado',
+                mensaje: 'Nota actualizada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al actualizar reunión',
+                mensaje: 'Error al actualizar nota',
                 error: err
             })
         })
 });
-
-
 
 module.exports = app;

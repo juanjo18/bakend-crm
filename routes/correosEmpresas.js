@@ -1,7 +1,7 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Rcorreo = require('../models/registrarCorreo');
+var Rcorreo = require('../models/correosEmpresas');
 var auth = require('../middlewares/autenticacion');
 
 
@@ -36,7 +36,7 @@ app.get('/:id', auth.verificaToken, (req, res) => {
      console.log(id)
     Rcorreo.findAll({
         where:{
-            fkcontacto: id,
+            fkempresa: id,
         }
     }).then(correos => {
         if (correos) {
@@ -99,8 +99,10 @@ app.post('/', (req, res) => {
             descripcion: body.descripcion,
             fecha: body.fecha,
             hora: body.hora,
-            fkcontacto: body.contactado,
-            fkusuario: body.id
+            fkempresa: body.contactado,
+            fkusuario: body.id,
+            createdAt: body.createdAtLlamada,
+            updateAt:body.updateAtLlamada
 
         })
         .then(correo => {
@@ -157,11 +159,13 @@ app.put('/:id', (req, res, next) => {
     var body = req.body;
 
     Rcorreo.update({
-            descripcion: body.descripcion,
-            fecha: body.fecha,
-            hora: body.hora,
-            fkcontacto: body.contactado,
-            fkusuario: body.id
+        descripcion: body.descripcion,
+        fecha: body.fecha,
+        hora: body.hora,
+        fkempresa: body.contactado,
+        fkusuario: body.id,
+        createdAt: body.createdAtLlamada,
+        updateAt:body.updateAtLlamada
         }, {
             where: {
                 id_rcorreo: id

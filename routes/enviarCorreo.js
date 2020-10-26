@@ -9,6 +9,12 @@ var EnviarCorreo = require('../models/enviarCorreo');
 // ==========================================
 
 
+
+
+// ==========================================
+//  PENDIENTE PENDIENTE PENDIENTE PENDIENTE
+// ==========================================
+
 app.get('/', (req, res) => {
 
     EnviarCorreo.findAll().then(eCorreos => {
@@ -76,17 +82,17 @@ app.post('/', (req, res) => {
             //pendiente
 
         })
-        .then(empresa => {
+        .then(correo => {
             res.status(200).json({
-                usuario: empresa,
+                usuario: correo,
                 ok: 'true',
-                mensaje: 'EnviarCorreo agregada'
+                mensaje: 'Correo agregado'
             })
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al agregar empresa',
+                mensaje: 'Error al agregar correo',
                 errors: err
             })
         })
@@ -108,14 +114,14 @@ app.delete('/:id', (req, res, next) => {
         .then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'EnviarCorreo eliminada',
+                mensaje: 'Correo eliminado',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al eliminar empresa',
+                mensaje: 'Error al eliminar correo',
                 error: err
             })
         })

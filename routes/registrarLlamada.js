@@ -2,7 +2,7 @@ const json = require('body-parser');
 var express = require('express');
 var app = express();
 var Rllamada = require('../models/registrarLlamada');
-
+var auth = require('../middlewares/autenticacion')
 // ==========================================
 //  Obtener llamadas 
 // ==========================================
@@ -25,37 +25,64 @@ app.get('/', (req, res) => {
 });
 
 // ==========================================
-//  Obtener llamada
+//  Obtener llamada con id
 // ==========================================
-app.get('/:id', (req, res) => {
+app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-    Rllamada.findOne({
-            where: {
-                id_llamada: id
-            }
-        })
-        .then(llamada => {
-            if (llamada) {
-                res.status(200).json({
-                    ok: 'true',
-                    llamada: llamada
-                });
-            } else {
-                return res.status(400).json({
-                    ok: 'false',
-                    mensaje: 'No exite esa llamada'
-                });
-            }
-        })
-        .catch(err => {
+     console.log(id)
+    Rllamada.findAll({
+        where:{
+            fkcontacto: id,
+        }
+    }).then(llamadas => {
+        if (llamadas) {
+            res.status(200).json({
+                ok: 'true',
+                mensaje: 'Solo llamadas del contacto',
+                llamadas: llamadas
+            })
+        }
+        else {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al buscar llamada',
-                error: err
-            });
-        })
+                mensaje: "Error al recuperar las llamadas "
+            })
+        }
+    })
 });
+// ==========================================
+//  Obtener llamada
+// ==========================================
+// app.get('/:id', (req, res) => {
+
+//     var id = req.params.id;
+//     Rllamada.findOne({
+//             where: {
+//                 id_llamada: id
+//             }
+//         })
+//         .then(llamada => {
+//             if (llamada) {
+//                 res.status(200).json({
+//                     ok: 'true',
+//                     llamada: llamada
+//                 });
+//             } else {
+//                 return res.status(400).json({
+//                     ok: 'false',
+//                     mensaje: 'No exite esa llamada'
+//                 });
+//             }
+//         })
+//         .catch(err => {
+//             return res.status(500).json({
+//                 ok: 'false',
+//                 mensaje: 'Error al buscar llamada',
+//                 error: err
+//             });
+//         })
+// });
 
 // ==========================================
 //  Crear llamada

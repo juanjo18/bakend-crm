@@ -5,15 +5,16 @@ var Empresa = db.define('empresas', {
     nombre:  { type: Sequelize.STRING, allowNull: false},
     industria:  { type: Sequelize.STRING, allowNull: false},
     ciudad:  { type: Sequelize.STRING, allowNull: false},
-    ingresosAnuales:  { type: Sequelize.BIGINT, allowNull: false},
-    tipo_Cliente:  { type: Sequelize.STRING, allowNull: false},
-    No_Empleados:  { type: Sequelize.INTEGER, allowNull: false},
+    ingresos_anuales:  { type: Sequelize.BIGINT, allowNull: false},
+    tipo_cliente:  { type: Sequelize.STRING, allowNull: false},
+    no_empleados:  { type: Sequelize.INTEGER, allowNull: false},
     descripcion:  { type: Sequelize.STRING, allowNull: false},
-    No_Telefono:  { type: Sequelize.STRING, allowNull: false},
-    Zona_Horaria:  { type: Sequelize.STRING, allowNull: false},
-    Pagina_Corporativa:  { type: Sequelize.STRING, allowNull: false},
-    Propietario_de_Registro: {type: Sequelize.INTEGER, allowNull: false},
-    Estado_Region: {  type: Sequelize.STRING, allowNull: false}
+    no_telefono:  { type: Sequelize.STRING, allowNull: false},
+    zona_horaria:  { type: Sequelize.STRING, allowNull: false},
+    pagina_corporativa:  { type: Sequelize.STRING, allowNull: false},
+    propietario_registro: {type: Sequelize.INTEGER, allowNull: false},
+    estado_region: {  type: Sequelize.STRING, allowNull: false},
+    codigo_postal: {type: Sequelize.STRING, allowNull: true}
 },
 { 
 	timestamps: false  //Para evitar que se creen los columnas de update y creacion

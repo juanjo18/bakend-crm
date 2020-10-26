@@ -9,12 +9,12 @@ var bcrypt = require('bcryptjs');
 // var jwt = require('jsonwebtoken');
 
 
-app.get('/',  (req, res, next) => {
+app.get('/',  auth.verificaToken,  (req, res, next) => {
     console.log("Estas en el backp");
     
     Usuario.findAndCountAll({
         // Para lo de paginacion
-        offset:0 , limit: 10
+        offset:0 , limit: 30
     })
     .then(usuarios => {
         res.status(200).json({
@@ -30,6 +30,40 @@ app.get('/',  (req, res, next) => {
         })
     })
     
+});
+
+// ==========================================
+// Return a single contact with his id
+// ==========================================
+app.get('/unusuario/:id', auth.verificaToken, (req, res) => {
+
+    var id = req.params.id;
+    Usuario.findOne({
+        where: {
+            id_usuario: id
+        }
+    })
+        .then(unUsuario => {
+            if (unUsuario) {
+                res.status(200).json({
+                    ok: 'true',
+                    unUsuario: unUsuario
+                });
+            }
+            else {
+                return res.status(400).json({
+                    ok: 'false',
+                    mensaje: 'No exite ese usuario'
+                });
+            }
+        })
+        .catch(err => {
+            return re.status(500).json({
+                ok: 'false',
+                mensaje: 'Error al buscar el usuario',
+                error: err
+            });
+        })
 });
 
 // ==========================================
@@ -60,7 +94,8 @@ app.post('/',  auth.verificaToken, (req, res)=>{
     })
 });
 
-app.put('/:id', (req, res) =>{
+//actualizar
+app.put('/:id', auth.verificaToken, (req, res) =>{
     var id = req.params.id;
     var body = req.body;
     
@@ -99,7 +134,7 @@ app.put('/:id', (req, res) =>{
 // ==========================================
 //  Delete an user
 // ==========================================
-app.delete('/:id', (req, res) =>{
+app.delete('/:id',  auth.verificaToken, (req, res) =>{
     var id = req.params.id;
 
     Usuario.destroy({

@@ -1,7 +1,7 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Rreuniones = require('../models/registrarReuniones');
+var Rreuniones = require('../models/reunionesEmpresas');
 var auth = require('../middlewares/autenticacion')
 
 
@@ -36,13 +36,13 @@ app.get('/:id', auth.verificaToken, (req, res) => {
      console.log(id)
     Rreuniones.findAll({
         where:{
-            fkcontacto: id,
+            fkempresa: id,
         }
     }).then(reuniones => {
         if (reuniones) {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Solo reuniones del contacto',
+                mensaje: 'Solo reuniones de la empresa',
                 reuniones: reuniones
             })
         }
@@ -97,13 +97,15 @@ app.post('/', (req, res) => {
 
     Rreuniones.create({
 
-            descripcion: body.descripcionReunion,
-            asistentes: body.asistentesReunion,
-            resultado: body.resultadoReunion,
-            fecha: body.fechaReunion,
-            hora: body.horaReunion,
-            duracion: body.duracionReunion,
-            fkusuario: body.id
+        descripcion: body.descripcionReunionEmpresas,
+        fkempresa: body.fkempresaReunionEmpresas,
+        resultado: body.resultadoReunionEmpresas,
+        fecha: body.fechaReunionEmpresas,
+        hora: body.horaReunionEmpresas,
+        duracion: body.duracionReunionEmpresas,
+        fkusuario: body.id,
+        createAt: body.createAtReunionEmpresas,
+        updateAt: body.createAtReunionEmpresas
 
 
         })
@@ -162,13 +164,15 @@ app.put('/:id', (req, res, next) => {
     var body = req.body;
 
     Rreuniones.update({
-            descripcion: body.descripcionReunion,
-            asistentes: body.asistentesReunion,
-            resultado: body.resultadoReunion,
-            fecha: body.fechaReunion,
-            hora: body.horaReunion,
-            duracion: body.duracionReunion,
-            fkusuario: body.id
+            descripcion: body.descripcionReunionEmpresas,
+            fkempresa: body.fkempresaReunionEmpresas,
+            resultado: body.resultadoReunionEmpresas,
+            fecha: body.fechaReunionEmpresas,
+            hora: body.horaReunionEmpresas,
+            duracion: body.duracionReunionEmpresas,
+            fkusuario: body.id,
+            createAt: body.createAtReunionEmpresas,
+            updateAt: body.createAtReunionEmpresas
 
         }, {
             where: {

@@ -1,123 +1,116 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Rreuniones = require('../models/registrarReuniones');
+var Rllamada = require('../models/llamadasEmpresas');
 var auth = require('../middlewares/autenticacion')
-
-
 // ==========================================
-//  Obtener Reuniones
+//  Obtener llamadas 
 // ==========================================
 
 app.get('/', (req, res) => {
 
-    Rreuniones.findAll().then(reuniones => {
-        if (reuniones) {
+    Rllamada.findAll().then(llamadasempresas => {
+        if (llamadasempresas) {
             res.status(200).json({
                 ok: true,
-                reuniones: reuniones
+                llamadasempresas: llamadasempresas
             })
         } else {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al recuperar reuniones'
+                mensaje: 'Error al recuperar llamadas'
             })
         }
     })
 });
 
 // ==========================================
-//  Obtener Reuniones con ID
+//  Obtener llamada con id
 // ==========================================
-
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
      console.log(id)
-    Rreuniones.findAll({
+    Rllamada.findAll({
         where:{
-            fkcontacto: id,
+            fkempresa: id,
         }
-    }).then(reuniones => {
-        if (reuniones) {
+    }).then(llamadasempresas => {
+        if (llamadasempresas) {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Solo reuniones del contacto',
-                reuniones: reuniones
+                mensaje: 'Solo llamadas del contacto',
+                llamadasempresas: llamadasempresas
             })
         }
         else {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: "Error al recuperar las reuniones  "
+                mensaje: "Error al recuperar las llamadas "
             })
         }
     })
 });
-
-
 // ==========================================
-//  Obtener una reunion 
+//  Obtener llamada
 // ==========================================
 // app.get('/:id', (req, res) => {
 
 //     var id = req.params.id;
-//     Rreuniones.findOne({
+//     Rllamada.findOne({
 //             where: {
-//                 id_regisreunion: id
+//                 id_llamada: id
 //             }
 //         })
-//         .then(reunion => {
-//             if (reunion) {
+//         .then(llamada => {
+//             if (llamada) {
 //                 res.status(200).json({
 //                     ok: 'true',
-//                     reunion: reunion
+//                     llamada: llamada
 //                 });
 //             } else {
 //                 return res.status(400).json({
 //                     ok: 'false',
-//                     mensaje: 'No exite esa reunión'
+//                     mensaje: 'No exite esa llamada'
 //                 });
 //             }
 //         })
 //         .catch(err => {
 //             return res.status(500).json({
 //                 ok: 'false',
-//                 mensaje: 'Error al buscar reunión',
+//                 mensaje: 'Error al buscar llamada',
 //                 error: err
 //             });
 //         })
 // });
 
 // ==========================================
-//  Agregar reunion
+//  Crear llamada
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
 
-    Rreuniones.create({
-
-            descripcion: body.descripcionReunion,
-            asistentes: body.asistentesReunion,
-            resultado: body.resultadoReunion,
-            fecha: body.fechaReunion,
-            hora: body.horaReunion,
-            duracion: body.duracionReunion,
-            fkusuario: body.id
-
-
+    Rllamada.create({
+        descripcion: body.descripcionLlamada,
+        fkempresa: body.empresaLlamada,
+        fecha: body.fechaLlamada,
+        hora: body.horaLlamada,
+        resultado_llamada: body.resultadoLlamada,
+        fkusuario: body.id,
+        createdAt: body.createdAtLlamada,
+        updateAt:body.updateAtLlamada
         })
-        .then(reunion => {
+        .then(llamadaempresas => {
             res.status(200).json({
-                reunion: reunion,
+                llamadaempresas: llamadaempresas,
                 ok: 'true',
-                mensaje: 'Reunión agregada'
+                mensaje: 'Llamada agregada'
             })
         })
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al agregar reunión',
+                mensaje: 'Error al agregar llamada',
                 errors: err
             })
         })
@@ -125,71 +118,69 @@ app.post('/', (req, res) => {
 
 
 // ==========================================
-//  Borrar reunion
+//  Borrar Llamada
 // ==========================================
 
 app.delete('/:id', (req, res, next) => {
 
     var id = req.params.id;
 
-    Rreuniones.destroy({
+    Rllamada.destroy({
             where: {
-                id_regisreunion: id
+                id_llamada: id
             }
         })
         .then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Reunión eliminada',
+                mensaje: 'Llamada eliminada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al eliminar reunión',
+                mensaje: 'Error al eliminar llamada',
                 error: err
             })
         })
 });
 
 // ==========================================
-//  Actualizar reunion
+//  Actualizar llamada
 // ==========================================
 
 app.put('/:id', (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
 
-    Rreuniones.update({
-            descripcion: body.descripcionReunion,
-            asistentes: body.asistentesReunion,
-            resultado: body.resultadoReunion,
-            fecha: body.fechaReunion,
-            hora: body.horaReunion,
-            duracion: body.duracionReunion,
-            fkusuario: body.id
-
+    Rllamada.update({
+            descripcion: body.descripcionLlamada,
+            fkempresa: body.empresaLlamada,
+            fecha: body.fechaLlamada,
+            hora: body.horaLlamada,
+            resultado_llamada: body.resultadoLlamada,
+            fkusuario: body.id,
+            createdAt: body.createdAtLlamada,
+            update:body.updateLlamada
         }, {
             where: {
-                id_regisreunion: id
+                id_llamada: id
             }
         }).then(result => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Reunion actualizado',
+                mensaje: 'Llamada actualizada',
                 result: result
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al actualizar reunión',
+                mensaje: 'Error al actualizar llamada',
                 error: err
             })
         })
 });
-
-
 
 module.exports = app;

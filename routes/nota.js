@@ -2,7 +2,7 @@ const json = require('body-parser');
 var express = require('express');
 var app = express();
 var Nota = require('../models/nota');
-
+var auth = require('../middlewares/autenticacion')
 // ==========================================
 //  Obtener todas las notas
 // ==========================================
@@ -27,34 +27,65 @@ app.get('/', (req, res) => {
 // ==========================================
 //  Obtener una nota
 // ==========================================
-app.get('/:id', (req, res) => {
+// app.get('/:id', (req, res) => {
+
+//     var id = req.params.id;
+//     Nota.findOne({
+//             where: {
+//                 id_nota: id
+//             }
+//         })
+//         .then(nota => {
+//             if (nota) {
+//                 res.status(200).json({
+//                     ok: 'true',
+//                     mensaje: 'solo una nota',
+//                     nota: nota
+//                 });
+//             } else {
+//                 return res.status(400).json({
+//                     ok: 'false',
+//                     mensaje: 'No exite esa nota'
+//                 });
+//             }
+//         })
+//         .catch(err => {
+//             return res.status(500).json({
+//                 ok: 'false',
+//                 mensaje: 'Error al buscar nota',
+//                 error: err
+//             });
+//         })
+// });
+
+
+
+// ==========================================
+//  ontener notas con id
+// ==========================================
+app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-    Nota.findOne({
-            where: {
-                id_nota: id
-            }
-        })
-        .then(nota => {
-            if (nota) {
-                res.status(200).json({
-                    ok: 'true',
-                    nota: nota
-                });
-            } else {
-                return res.status(400).json({
-                    ok: 'false',
-                    mensaje: 'No exite esa nota'
-                });
-            }
-        })
-        .catch(err => {
+     console.log(id)
+    Nota.findAll({
+        where:{
+            fkcontactos: id,
+        }
+    }).then(notas => {
+        if (notas) {
+            res.status(200).json({
+                ok: 'true',
+                mensaje: 'Solo notas del contacto',
+                notas: notas
+            })
+        }
+        else {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al buscar nota',
-                error: err
-            });
-        })
+                mensaje: "Error al recuperar las notas "
+            })
+        }
+    })
 });
 
 // ==========================================
