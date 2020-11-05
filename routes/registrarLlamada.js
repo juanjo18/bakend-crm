@@ -90,14 +90,20 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 app.post('/', (req, res) => {
     var body = req.body;
 
+    console.log('esto recibo para llamada', body);
+var fecha = new Date();
+
+console.log('Descipcion',body.descripcion);
     Rllamada.create({
 
-            descripcion: body.descripcionLlamada,
-            fkcontacto: body.contactadoLlamada,
-            fecha: body.fechaLlamada,
-            hora: body.horaLlamada,
-            resultado_llamada: body.resultadoLlamada,
-            fkusuario: body.id
+        descripcion: body.descripcion,
+        fkcontacto: body.fkcontacto,
+        fecha: body.fecha,
+        hora: body.hora,
+        resultado_llamada: body.resultado_llamada,
+        fkusuario: body.fkusuario,
+        createdAt: fecha,
+        updateAt: fecha
         })
         .then(llamada => {
             res.status(200).json({
@@ -152,14 +158,17 @@ app.delete('/:id', (req, res, next) => {
 app.put('/:id', (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
-
+    var fecha = new Date();
     Rllamada.update({
-            descripcion: body.descripcionLlamada,
-            fkcontacto: body.contactadoLlamada,
-            fecha: body.fechaLlamada,
-            hora: body.horaLlamada,
-            resultado_llamada: body.resultadoLlamada,
-            fkusuario: body.id
+            descripcion: body.descripcion,
+            fkcontacto: body.fkcontacto,
+            fecha: body.fecha,
+            hora: body.hora,
+            resultado_llamada: body.resultado_llamada,
+            fkusuario: body.fkusuario,
+            createdAt: fecha,
+            updateAt: fecha
+
         }, {
             where: {
                 id_llamada: id

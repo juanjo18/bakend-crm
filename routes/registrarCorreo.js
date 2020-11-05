@@ -93,14 +93,17 @@ app.get('/:id', (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-
+    var fecha = new Date();
+    console.log('Esto recibo', body);
     Rcorreo.create({
 
             descripcion: body.descripcion,
             fecha: body.fecha,
             hora: body.hora,
-            fkcontacto: body.contactado,
-            fkusuario: body.id
+            fkcontacto: body.fkcontacto,
+            fkusuario: body.fkusuario,
+            createdAt: fecha,
+            updatedAt: fecha
 
         })
         .then(correo => {

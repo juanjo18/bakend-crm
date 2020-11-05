@@ -3,23 +3,23 @@ var express = require('express');
 var app = express();
 var Empresa = require('../models/empresa');
 var auth = require('../middlewares/autenticacion')
-
+var db = require('../config/database');
 // ==========================================
 //  Return all enterprises from database
 // ==========================================
 app.get('/', auth.verificaToken, (req, res) => {
 
-    Empresa.findAll().then(empresas => {
+    db.query('sp_empresas').then(empresas => {
         if (empresas) {
             res.status(200).json({
-                ok: 'true',
-                empresas: empresas
+                empresas: empresas[0]
             })
         }
+
         else {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: "Error al recuperar los datos "
+                mensaje: "Error al recuperar los datos"
             })
         }
     })
@@ -30,31 +30,76 @@ app.get('/', auth.verificaToken, (req, res) => {
 // Return all contacts whith clause where id
 // ==========================================
 
-
 app.get('/misempresas/:miId', auth.verificaToken, (req, res) => {
 
     var miId = req.params.miId;
-     console.log(miId)
-    Empresa.findAll({
-        where:{
-            propietario_registro: parseInt(miId),
-        }
-    }).then(misEmpresas => {
+    
+
+    db.query('sp_misempresas'+' '+miId).then(misEmpresas => {
         if (misEmpresas) {
             res.status(200).json({
-                ok: 'true',
-                mensaje: 'Solo mis empresas',
-                misEmpresas: misEmpresas
+                mensaje : 'mis empresas solamente',
+                misEmpresas: misEmpresas[0]
             })
         }
+
         else {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: "Error al recuperar mis empresas "
+                mensaje: "Error al recuperar mis empresas"
             })
         }
     })
 });
+
+//app.get('/', auth.verificaToken, (req, res) => {
+
+//    Empresa.findAll().then(empresas => {
+//        if (empresas) {
+//            res.status(200).json({
+//                ok: 'true',
+//                empresas: empresas
+//            })
+//        }
+//       else {
+//            return res.status(500).json({
+//                ok: 'false',
+//                mensaje: "Error al recuperar los datos "
+//            })
+//        }
+//    })
+//});
+
+
+// ==========================================
+// Return all contacts whith clause where id
+// ==========================================
+
+
+ // app.get('/misempresas/:miId', auth.verificaToken, (req, res) => {
+
+ //   var miId = req.params.miId;
+ //    console.log(miId)
+  //  Empresa.findAll({
+   //     where:{
+  //          propietario_registro: parseInt(miId),
+ //       }
+ //   }).then(misEmpresas => {
+ //       if (misEmpresas) {
+//            res.status(200).json({
+//                ok: 'true',
+  //              mensaje: 'Solo mis empresas',
+   //             misEmpresas: misEmpresas
+  //          })
+  //      }
+  //      else {
+  //          return res.status(500).json({
+  //              ok: 'false',
+  //              mensaje: "Error al recuperar mis empresas "
+  //          })
+  //      }
+//    })
+//});
 
 
 // ==========================================
@@ -62,33 +107,32 @@ app.get('/misempresas/:miId', auth.verificaToken, (req, res) => {
 // ==========================================
 app.get('/:id', auth.verificaToken, (req, res) => {
 
-    var id = req.params.id;
-    Empresa.findOne({
-        where: {
-            id_empresa: id
-        }
-    })
-        .then(unaEmpresa => {
-            if (unaEmpresa) {
-                res.status(200).json({
-                    ok: 'true',
-                    unaEmpresa: unaEmpresa
-                });
-            }
-            else {
-                return res.status(400).json({
-                    ok: 'false',
-                    mensaje: 'No exite ese empresa'
-                });
-            }
-        })
-        .catch(err => {
-            return re.status(500).json({
-                ok: 'false',
-                mensaje: 'Error al buscar el empresa',
-                error: err
-            });
-        })
+   var id = req.params.id;
+   Empresa.findOne({
+       where: {
+           id_empresa: id
+       }
+   })
+       .then(unaEmpresa => {
+           if (unaEmpresa) {
+               res.status(200).json({
+                   ok: 'true',
+                   unaEmpresa: unaEmpresa
+               });
+           }
+           else {
+               return res.status(400).json({
+                   ok: 'false',
+                   mensaje: 'No exite ese empresa'
+               });
+           }
+       })
+       .catch(err => {
+           return re.status(500).json({
+               ok: 'false',
+               mensaje: 'Error al buscar el empresa',
+               error: err            });
+       })
 });
 
 // ==========================================

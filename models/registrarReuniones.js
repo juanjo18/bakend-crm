@@ -3,7 +3,7 @@ const db = require('../config/database');
 var RegistrarReunion = db.define('registrar_reuniones', {
     id_regisreunion: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
     descripcion: { type: Sequelize.STRING, allowNull: false },
-    fkcontacto: { type: Sequelize.STRING, allowNull: false },
+    fkcontacto: { type: Sequelize.INTEGER, allowNull: false },
     resultado: { type: Sequelize.STRING, allowNull: false },
     fecha: { type: Sequelize.DATEONLY, allowNull: false },
     hora: { type: Sequelize.STRING, allowNull: false },

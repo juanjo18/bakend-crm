@@ -9,11 +9,11 @@ var auth = require('../middlewares/autenticacion')
 
 app.get('/', (req, res) => {
 
-    Rllamada.findAll().then(llamadasempresas => {
-        if (llamadasempresas) {
+    Rllamada.findAll().then(llamadas => {
+        if (llamadas) {
             res.status(200).json({
                 ok: true,
-                llamadasempresas: llamadasempresas
+                llamadas: llamadas
             })
         } else {
             return res.status(500).json({
@@ -35,12 +35,12 @@ app.get('/:id', auth.verificaToken, (req, res) => {
         where:{
             fkempresa: id,
         }
-    }).then(llamadasempresas => {
-        if (llamadasempresas) {
+    }).then(llamadas => {
+        if (llamadas) {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Solo llamadas del contacto',
-                llamadasempresas: llamadasempresas
+                mensaje: 'Solo llamadas de la empresa',
+                llamadas: llamadas
             })
         }
         else {

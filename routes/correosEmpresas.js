@@ -42,7 +42,7 @@ app.get('/:id', auth.verificaToken, (req, res) => {
         if (correos) {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Solo correos del contacto',
+                mensaje: 'Solo correos de la empresa',
                 correos: correos
             })
         }

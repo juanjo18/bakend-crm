@@ -94,17 +94,20 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-
+    console.log('Esto estoy recibiendo: ',body);
+    var fecha = new Date();
+    console.log('intento imprimir fkContacto',body.fkcontacto);
     Rreuniones.create({
 
-            descripcion: body.descripcionReunion,
-            asistentes: body.asistentesReunion,
-            resultado: body.resultadoReunion,
-            fecha: body.fechaReunion,
-            hora: body.horaReunion,
-            duracion: body.duracionReunion,
-            fkusuario: body.id
-
+            descripcion: body.descripcion,
+            fkcontacto: body.fkcontacto,
+            resultado: body.resultado,
+            fecha: body.fecha,
+            hora: body.hora,
+            duracion: body.duracion,
+            fkusuario: body.fkusuario,
+            createdAt: fecha,
+            updatedAt: fecha
 
         })
         .then(reunion => {

@@ -1,4 +1,4 @@
-const json = require('body-parser');
+const {json} = require('body-parser');
 var express = require('express');
 var app = express();
 var Nota = require('../models/nota');
@@ -93,10 +93,14 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-
+    var fecha = new Date();
+    
     Nota.create({
-            comentario: body.descripcion,
-            fkusuario: body.id
+            comentario: body.comentario,
+            fkusuario: body.fkusuario,
+            fkcontactos: body.fkcontacto,
+            createdAt:  fecha,
+            updatedAt: null
 
         })
         .then(nota => {
@@ -111,8 +115,11 @@ app.post('/', (req, res) => {
                 ok: 'false',
                 mensaje: 'Error al agregar nota',
                 errors: err
+                
             })
         })
+
+        
 });
 
 
