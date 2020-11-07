@@ -10,7 +10,9 @@ app.get('/', auth.verificaToken, (req, res) => {
     db.query('sp_informes').then(informes => {
         if (informes) {
             res.status(200).json({
+                mensaje: 'un dato',
                 informes: informes[0]
+
             })
         }
 

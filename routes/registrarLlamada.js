@@ -2,7 +2,34 @@ const json = require('body-parser');
 var express = require('express');
 var app = express();
 var Rllamada = require('../models/registrarLlamada');
-var auth = require('../middlewares/autenticacion')
+var auth = require('../middlewares/autenticacion');
+var db = require('../config/database');
+
+
+// ==========================================
+//  Return all last calls from database
+// ==========================================
+
+app.get('/reporte', auth.verificaToken, (req, res) => {
+
+    db.query('sp_reporteLlamadas').then(reporteLlamadas => {
+        if (reporteLlamadas) {
+            res.status(200).json({
+                mensaje: 'Llamadas realizadas',
+                reporteLlamadas: reporteLlamadas[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar las llamadas"
+            })
+        }
+    })
+});
+
+
 // ==========================================
 //  Obtener llamadas 
 // ==========================================
@@ -188,5 +215,8 @@ app.put('/:id', (req, res, next) => {
             })
         })
 });
+
+
+
 
 module.exports = app;

@@ -3,6 +3,31 @@ var express = require('express');
 var app = express();
 var Rreuniones = require('../models/registrarReuniones');
 var auth = require('../middlewares/autenticacion')
+var db = require('../config/database');
+
+// ==========================================
+//  Return all last calls from database
+// ==========================================
+
+app.get('/reporte', auth.verificaToken, (req, res) => {
+
+    db.query('sp_reporteReuniones').then(reporteReuniones => {
+        if (reporteReuniones) {
+            res.status(200).json({
+                mensaje: 'Reuniones - visitas realizadas',
+                reporteReuniones: reporteReuniones[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar las reuniones - visitas"
+            })
+        }
+    })
+});
+
 
 
 // ==========================================
