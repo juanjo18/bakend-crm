@@ -66,12 +66,15 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
     Nota.findAll({
         where:{
             fkcontactos: id,
         }
     }).then(notas => {
+        console.log('Fecha',notas);
+
+        // var fecha = Fecha.notas.dataValues.createdAt;
+        // console.log(fecha.getDay());
         if (notas) {
             res.status(200).json({
                 ok: 'true',
@@ -94,13 +97,15 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 app.post('/', (req, res) => {
     var body = req.body;
     var fecha = new Date();
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    console.log('FullDateTime',fulldateTime);
     
     Nota.create({
-            comentario: body.comentario,
+            comentario: body.comentario,  
             fkusuario: body.fkusuario,
             fkcontactos: body.fkcontacto,
-            createdAt:  fecha,
-            updatedAt: null
+            createdAt:  fulldateTime,
+            updatedAt: fulldateTime
 
         })
         .then(nota => {

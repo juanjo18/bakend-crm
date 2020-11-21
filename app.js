@@ -45,7 +45,8 @@ var reunionesEmpresasRoutes = require ('./routes/reunionesEmpresas');
 var llamadasEmpresasRoutes =require('./routes/llamadasEmpresas');
 var correosEmpresasRoutes= require('./routes/correosEmpresas');
 var informesRoutes = require('./routes/informes');
-
+var etapasRoutes = require ('./routes/etapasNegocio');
+var negocioContactoRoutes = require ('./routes/negociosContactos');
 
 //Rutas -> Middleware
 app.use('/contactos', contactosRoutes);
@@ -61,4 +62,6 @@ app.use('/reunionesempresas', reunionesEmpresasRoutes);
 app.use('/llamadasempresas',llamadasEmpresasRoutes);
 app.use('/correosempresas',correosEmpresasRoutes);
 app.use('/informes',informesRoutes);
+app.use('/etapas', etapasRoutes);
+app.use('/negociosContactos', negocioContactoRoutes);
 app.use('/', appRoutes);

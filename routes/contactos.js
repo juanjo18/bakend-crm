@@ -4,15 +4,18 @@ var app = express();
 var Contacto = require('../models/contacto');
 var auth = require('../middlewares/autenticacion')
 var db = require('../config/database');
+var body = require('body-parser');
 
 
 // ==========================================
 //  Return all contacts from database
 // ==========================================
 
-app.get('/', auth.verificaToken, (req, res) => {
+app.get('/paginacionContactos/:inicio', auth.verificaToken, (req, res) => {
 
-    db.query('sp_contactos').then(contactos => {
+    var inicio = req.params.inicio;
+
+    db.query('sp_paginacionContactos'+' '+inicio).then(contactos => {
         if (contactos) {
             res.status(200).json({
                 contactos: contactos[0]
@@ -28,17 +31,67 @@ app.get('/', auth.verificaToken, (req, res) => {
     })
 });
 
+// ==========================================
+//  Contar numero de contactos
+// ==========================================
+
+app.get('/contadorContactos', auth.verificaToken, (req, res) => {
+
+    
+
+    db.query('sp_contadorContactos').then(contador => {
+        if (contador) {
+            res.status(200).json({
+                contador: contador[0]
+            })
+        }
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los datos"
+            })
+        }
+    })
+});
+
+// ==========================================
+//  Contar numero de mis contactos
+// ==========================================
+
+app.get('/contadorMisContactos/:miId', auth.verificaToken, (req, res) => {
+
+    
+    var miId = req.params.miId;
+    
+    db.query('sp_contadorMisContactos'+' '+miId).then(contador => {
+        if (contador) {
+            res.status(200).json({
+                contador: contador[0]
+            })
+        }
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los datos"
+            })
+        }
+    })
+});
+
 
 // ==========================================
 // Return all contacts whith clause where id
 // ==========================================
 
-app.get('/miscontactos/:miId', auth.verificaToken, (req, res) => {
+app.get('/miscontactos/:miId/:desde', auth.verificaToken, (req, res) => {
 
+    console.log('Ejecutando peticion');
     var miId = req.params.miId;
+    var desde = req.params.desde;
     
+    console.log('Ejecutando peticion');
 
-    db.query('sp_miscontactos'+' '+miId).then(misContactos => {
+    db.query('sp_paginacionMisContactos'+' '+miId+','+''+ desde).then(misContactos => {
         if (misContactos) {
             res.status(200).json({
                 mensaje : 'mis contactos solamente',
@@ -109,7 +162,7 @@ app.get('/relacionados/:miId', auth.verificaToken, (req, res) => {
 // ==========================================
 // Return a single contact with his id
 // ==========================================
-app.get('/:id', auth.verificaToken, (req, res) => {
+app.get('/consultaContacto/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
     console.log('id C Recibido', id);
@@ -213,11 +266,13 @@ app.delete('/:id', auth.verificaToken, (req, res, next) => {
 app.put('/:id', auth.verificaToken, (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
+    console.log('info para editar Contactos', body);
+    console.log(body.email);
 
     Contacto.update({
         nombre: body.nombre,
         apellido: body.apellido,
-        correo: body.correo,
+        email: body.email,
         telefono: body.telefono,
         departamento: body.departamento,
         propietario_registro: body.propietario,

@@ -2,19 +2,44 @@ const { json } = require('body-parser');
 var express = require('express');
 var app = express();
 var Usuario = require('../models/usuario');
-var auth = require('../middlewares/autenticacion')
+var auth = require('../middlewares/autenticacion');
+var db = require('../config/database');
 
 // Par encriptar la contraseña
 var bcrypt = require('bcryptjs');
 // var jwt = require('jsonwebtoken');
 
 
-app.get('/',  auth.verificaToken,  (req, res, next) => {
+// ==========================================
+//  Contar numero de usuarios
+// ==========================================
+
+app.get('/contadorUsuarios', auth.verificaToken, (req, res) => {
+
+    db.query('sp_contadorUsuarios').then(contador => {
+        if (contador) {
+            res.status(200).json({
+                contador: contador[0]
+            })
+        }
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los datos"
+            })
+        }
+    })
+});
+
+
+
+app.get('/paginacionUsuarios/:desde',  auth.verificaToken,  (req, res, next) => {
     console.log("Estas en el backp");
     
+    var desde = req.params.desde;
     Usuario.findAndCountAll({
         // Para lo de paginacion
-        offset:0 , limit: 30
+        offset: parseInt( desde) , limit: 10
     })
     .then(usuarios => {
         res.status(200).json({
@@ -99,10 +124,12 @@ app.put('/:id', auth.verificaToken, (req, res) =>{
     var id = req.params.id;
     var body = req.body;
     
+    console.log('Actualizar Usuario', body);
     Usuario.update(
         {
             nombre: body.nombre,
-            email: body.email
+            email: body.email,
+            rol: body.rol
         },
 
         { where: {

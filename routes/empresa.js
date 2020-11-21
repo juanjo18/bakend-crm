@@ -4,12 +4,42 @@ var app = express();
 var Empresa = require('../models/empresa');
 var auth = require('../middlewares/autenticacion')
 var db = require('../config/database');
+const { request } = require('./contactos');
+
+
+// ==========================================
+//  Obtener nombres, ids ...,  de todas las empresas
+// ==========================================
+
+app.get('/listaEmpresas', (req, res) => {
+
+    Empresa.findAll({
+        attributes: ['id_empresa', 'nombre']
+    }).then(empresas => {
+        if (empresas) {
+            res.status(200).json({
+                ok: true,
+                empresas: empresas
+            })
+        } else {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'error al recuperar empresas'
+            })
+        }
+    })
+});
+
+
+
+
 // ==========================================
 //  Return all enterprises from database
 // ==========================================
-app.get('/', auth.verificaToken, (req, res) => {
+app.get('/paginacionEmpresas/:inicio', auth.verificaToken, (req, res) => {
+    var inicio= req.params.inicio;
 
-    db.query('sp_empresas').then(empresas => {
+    db.query('sp_paginacionEmpresas'+' '+inicio).then(empresas => {
         if (empresas) {
             res.status(200).json({
                 empresas: empresas[0]
@@ -27,15 +57,15 @@ app.get('/', auth.verificaToken, (req, res) => {
 
 
 // ==========================================
-// Return all contacts whith clause where id
+// Return all enterprises whith clause where id
 // ==========================================
 
-app.get('/misempresas/:miId', auth.verificaToken, (req, res) => {
+app.get('/paginacionMisEmpresas/:miId/:desde', auth.verificaToken, (req, res) => {
 
     var miId = req.params.miId;
-    
+    var desde = req.params.desde;
 
-    db.query('sp_misempresas'+' '+miId).then(misEmpresas => {
+    db.query('sp_paginacionMisEmpresas'+' '+miId+', '+desde).then(misEmpresas => {
         if (misEmpresas) {
             res.status(200).json({
                 mensaje : 'mis empresas solamente',
@@ -52,58 +82,59 @@ app.get('/misempresas/:miId', auth.verificaToken, (req, res) => {
     })
 });
 
-//app.get('/', auth.verificaToken, (req, res) => {
-
-//    Empresa.findAll().then(empresas => {
-//        if (empresas) {
-//            res.status(200).json({
-//                ok: 'true',
-//                empresas: empresas
-//            })
-//        }
-//       else {
-//            return res.status(500).json({
-//                ok: 'false',
-//                mensaje: "Error al recuperar los datos "
-//            })
-//        }
-//    })
-//});
 
 
 // ==========================================
-// Return all contacts whith clause where id
+//  Contar numero de empresas
 // ==========================================
 
+app.get('/contadorEmpresas', auth.verificaToken, (req, res) => {
 
- // app.get('/misempresas/:miId', auth.verificaToken, (req, res) => {
+    
+    db.query('sp_contadorEmpresas').then(contador => {
+        if (contador) {
+            res.status(200).json({
+                contador: contador[0]
+            })
+        }
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los datos"
+            })
+        }
+    })
+});
 
- //   var miId = req.params.miId;
- //    console.log(miId)
-  //  Empresa.findAll({
-   //     where:{
-  //          propietario_registro: parseInt(miId),
- //       }
- //   }).then(misEmpresas => {
- //       if (misEmpresas) {
-//            res.status(200).json({
-//                ok: 'true',
-  //              mensaje: 'Solo mis empresas',
-   //             misEmpresas: misEmpresas
-  //          })
-  //      }
-  //      else {
-  //          return res.status(500).json({
-  //              ok: 'false',
-  //              mensaje: "Error al recuperar mis empresas "
-  //          })
-  //      }
-//    })
-//});
 
 
 // ==========================================
-// Return a single contact with his id
+//  Contar numero de mis empresas
+// ==========================================
+
+app.get('/contadorMisEmpresas/:miId', auth.verificaToken, (req, res) => {
+
+    var miId = req.params.miId;
+
+    db.query('sp_contadorMisEmpresas'+' '+miId).then(contador => {
+        if (contador) {
+            res.status(200).json({
+                contador: contador[0]
+            })
+        }
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los datos"
+            })
+        }
+    })
+});
+
+
+
+// ==========================================
+// Return a single enterprise with his id
 // ==========================================
 app.get('/:id', auth.verificaToken, (req, res) => {
 

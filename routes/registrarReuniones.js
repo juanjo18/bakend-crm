@@ -122,17 +122,21 @@ app.post('/', (req, res) => {
     console.log('Esto estoy recibiendo: ',body);
     var fecha = new Date();
     console.log('intento imprimir fkContacto',body.fkcontacto);
+
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+
     Rreuniones.create({
 
             descripcion: body.descripcion,
             fkcontacto: body.fkcontacto,
             resultado: body.resultado,
-            fecha: body.fecha,
+            fecha: (body.fecha)+' ' + fullHora,
             hora: body.hora,
             duracion: body.duracion,
             fkusuario: body.fkusuario,
-            createdAt: fecha,
-            updatedAt: fecha
+            createdAt: fulldateTime,
+            updatedAt: fulldateTime
 
         })
         .then(reunion => {

@@ -1,72 +1,46 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Rllamada = require('../models/registrarLlamada');
+var EtapaNegocio = require('../models/etapasNegocio');
 var auth = require('../middlewares/autenticacion');
 var db = require('../config/database');
-
-
 // ==========================================
-//  Return all last calls from database
-// ==========================================
-
-app.get('/reporte', auth.verificaToken, (req, res) => {
-
-    db.query('sp_reporteLlamadas').then(reporteLlamadas => {
-        if (reporteLlamadas) {
-            res.status(200).json({
-                mensaje: 'Llamadas realizadas',
-                reporteLlamadas: reporteLlamadas[0]
-            })
-        }
-
-        else {
-            return res.status(500).json({
-                ok: 'false',
-                mensaje: "Error al recuperar las llamadas"
-            })
-        }
-    })
-});
-
-
-// ==========================================
-//  Obtener llamadas 
+//  Obtener etapas de negocio
 // ==========================================
 
 app.get('/', (req, res) => {
 
-    Rllamada.findAll().then(llamadas => {
-        if (llamadas) {
+    EtapaNegocio.findAll().then(etapas => {
+        if (etapas) {
             res.status(200).json({
                 ok: true,
-                llamadas: llamadas
+                etapas: etapas
             })
         } else {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al recuperar llamadas'
+                mensaje: 'Error al recuperar etapas'
             })
         }
     })
 });
 
 // ==========================================
-//  Obtener llamada con id
+//  Obtener etapa con id
 // ==========================================
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
      console.log(id)
-    Rllamada.findAll({
+    EtapaNegocio.findAll({
         where:{
-            fkcontacto: id,
+            fkempresa: id,
         }
     }).then(llamadas => {
         if (llamadas) {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Solo llamadas del contacto',
+                mensaje: 'Solo llamadas de la empresa',
                 llamadas: llamadas
             })
         }
@@ -79,12 +53,12 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     })
 });
 // ==========================================
-//  Obtener llamada
+//  Obtener etapa
 // ==========================================
 // app.get('/:id', (req, res) => {
 
 //     var id = req.params.id;
-//     Rllamada.findOne({
+//     EtapaNegocio.findOne({
 //             where: {
 //                 id_llamada: id
 //             }
@@ -112,34 +86,30 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // });
 
 // ==========================================
-//  Crear llamada
+//  Crear etapa
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-
-    console.log('esto recibo para llamada', body);
-var fecha = new Date();
 var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+
 console.log('FullDateTime',fulldateTime);
 
-console.log('Descipcion',body.descripcion);
-    Rllamada.create({
-
-        descripcion: body.descripcion,
-        fkcontacto: body.fkcontacto,
-        fecha: (body.fecha)+' '+fullHora,
-        hora: body.hora,
-        resultado_llamada: body.resultado_llamada,
-        fkusuario: body.fkusuario,
+    EtapaNegocio.create({
+        descripcion: body.descripcionLlamada,
+        fkempresa: body.empresaLlamada,
+        fecha: (body.fechaLlamada) + fullHora,
+        hora: body.horaLlamada,
+        resultado_llamada: body.resultadoLlamada,
+        fkusuario: body.id,
         createdAt: fulldateTime,
-        updateAt: fulldateTime
+        updateAt:  fulldateTime
         })
-        .then(llamada => {
+        .then(llamadaempresas => {
             res.status(200).json({
-                llamada: llamada,
+                llamadaempresas: llamadaempresas,
                 ok: 'true',
-                mensaje: 'Reunion agregada'
+                mensaje: 'Llamada agregada'
             })
         })
         .catch(err => {
@@ -153,14 +123,14 @@ console.log('Descipcion',body.descripcion);
 
 
 // ==========================================
-//  Borrar Llamada
+//  Borrar etapa
 // ==========================================
 
 app.delete('/:id', (req, res, next) => {
 
     var id = req.params.id;
 
-    Rllamada.destroy({
+    EtapaNegocio.destroy({
             where: {
                 id_llamada: id
             }
@@ -182,44 +152,36 @@ app.delete('/:id', (req, res, next) => {
 });
 
 // ==========================================
-//  Actualizar llamada
+//  Actualizar etapa
 // ==========================================
 
 app.put('/:id', (req, res, next) => {
+    
     var id = req.params.id;
     var body = req.body;
+    console.log('Recibido',body);
     var fecha = new Date();
-    Rllamada.update({
-            descripcion: body.descripcion,
-            fkcontacto: body.fkcontacto,
-            fecha: body.fecha,
-            hora: body.hora,
-            resultado_llamada: body.resultado_llamada,
-            fkusuario: body.fkusuario,
-            createdAt: fecha,
-            updateAt: fecha
-
+    EtapaNegocio.update({
+            nombre: body.nombre,
+            probabilidad: body.probabilidad,
+            updatedAt: fecha
         }, {
             where: {
-                id_llamada: id
+                id_etapa: id
             }
-        }).then(result => {
+        }).then(etapa => {
             res.status(200).json({
                 ok: 'true',
-                mensaje: 'Llamada actualizada',
-                result: result
+                mensaje: 'Etapa actualizada'
             })
         })
         .catch(err => {
             res.status(400).json({
                 ok: 'false',
-                mensaje: 'Error al actualizar llamada',
+                mensaje: 'No se pudo actualizar la etapa',
                 error: err
             })
         })
 });
-
-
-
 
 module.exports = app;

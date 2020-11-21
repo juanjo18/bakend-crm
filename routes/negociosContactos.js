@@ -1,12 +1,65 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Negocio = require('../models/negocio');
+var Negocio = require('../models/negociosContactos');
+var db = require('../config/database');
+var auth = require('../middlewares/autenticacion')
+
 
 // ==========================================
-//  Obtener todos los negocios, He actualizado solo hasta en Negocios, los elementos por debajo aun faltan
+//  Obtener negocios relacionados a un contacto
 // ==========================================
-app.get('/', (req, res) => {
+
+app.get('/fkcontacto/:fkcontacto', auth.verificaToken, (req, res) => {
+
+    var fkcontacto = req.params.fkcontacto;
+
+    db.query('sp_negocio_contacto'+' '+fkcontacto).then(negocios => {
+        if (negocios) {
+            res.status(200).json({
+                negocios: negocios[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los negocios de un solo contacto"
+            })
+        }
+    })
+});
+
+
+// ==========================================
+//  Obtener negocios 
+// ==========================================
+
+app.get('/negocios/', auth.verificaToken, (req, res) => {
+
+    
+
+    db.query('sp_negocios').then(negocios => {
+        if (negocios) {
+            res.status(200).json({
+                negocios: negocios[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar todos los negocios"
+            })
+        }
+    })
+});
+
+
+// ==========================================
+//  Obtener todos los negocios
+// ==========================================
+app.get('/', auth.verificaToken, (req, res) => {
 
     Negocio.findAll().then(negocios => {
         if (negocios) {
@@ -26,7 +79,7 @@ app.get('/', (req, res) => {
 // ==========================================
 //  Obtener un negocio
 // ==========================================
-app.get('/:id', (req, res) => {
+app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
     Negocio.findOne({
@@ -60,23 +113,27 @@ app.get('/:id', (req, res) => {
 // ==========================================
 //  Agregar un negocio 
 // ==========================================
-app.post('/', (req, res) => {
+app.post('/', auth.verificaToken, (req, res) => {
     var body = req.body;
+    var fecha = new Date();
 
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     Negocio.create({
-            nombre_negocio: body.nombreNegocio,
-            etapas_negocio: body.etapaNegocio,
-            pipeline: body.pipelineNegocio,
-            cantidad: body.cantidadNegocio,
-            fkrelaciones: body.relacionesNegocio,
-            fkempresa: body.empresaNegocio,
-            fecha_cierre: body.cierreNegocio,
+            nombre_negocio: body.nombre_negocio,
+            pipeline: body.pipeline,
+            cantidad: body.cantidad,
+            fketapa: body.fketapa,
+            fkcontacto: body.fkcontacto,
+            fkusuario:body.fkusuario,
+            fcierre: (body.fcierre) +' '+fullHora,
+            createdAt:fulldateTime,
+            updatedAt: fulldateTime
 
-            
         })
         .then(negocio => {
             res.status(200).json({
-                usuario: negocio,
+                negocio: negocio,
                 ok: 'true',
                 mensaje: 'Negocio agregado'
             })
@@ -94,7 +151,7 @@ app.post('/', (req, res) => {
 //  Borra un negocio
 // ==========================================
 
-app.delete('/:id', (req, res, next) => {
+app.delete('/:id', auth.verificaToken, (req, res, next) => {
 
     var id = req.params.id;
 
@@ -124,19 +181,24 @@ app.delete('/:id', (req, res, next) => {
 //  Actualizar un negocio
 // ==========================================
 
-app.put('/:id', (req, res, next) => {
+app.put('/:id', auth.verificaToken, (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
 
+    console.log('Editar negocio:', body);
+
+    
+    var fecha = new Date();
     Negocio.update({
 
-        nombre_negocio: body.nombreNegocio,
-        etapas_negocio: body.etapaNegocio,
-        pipeline: body.pipelineNegocio,
-        cantidad: body.cantidadNegocio,
-        fkrelaciones: body.relacionesNegocio,
-        fkempresa: body.empresaNegocio,
-        fecha_cierre: body.cierreNegocio,
+        nombre_negocio: body.nombre_negocio,
+            pipeline: body.pipeline,
+            cantidad: body.cantidad,
+            fketapa: body.fketapa,
+            fkcontacto: body.fkcontacto,
+            fkusuario:body.fkusuario,
+            fcierre: body.fcierre,
+            updatedAt: fecha
 
         }, {
             where: {

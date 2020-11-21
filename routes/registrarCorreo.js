@@ -94,16 +94,19 @@ app.get('/:id', (req, res) => {
 app.post('/', (req, res) => {
     var body = req.body;
     var fecha = new Date();
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    console.log('FullDateTime',fulldateTime);
+    var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     console.log('Esto recibo', body);
     Rcorreo.create({
 
             descripcion: body.descripcion,
-            fecha: body.fecha,
+            fecha: (body.fecha)+' '+fullHora,
             hora: body.hora,
             fkcontacto: body.fkcontacto,
             fkusuario: body.fkusuario,
-            createdAt: fecha,
-            updatedAt: fecha
+            createdAt: fulldateTime,
+            updatedAt: fulldateTime
 
         })
         .then(correo => {
