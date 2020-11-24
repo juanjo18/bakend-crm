@@ -37,7 +37,10 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     Rcorreo.findAll({
         where:{
             fkempresa: id,
-        }
+        },
+        order: [
+            ['id_rcorreo', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(correos => {
         if (correos) {
             res.status(200).json({
@@ -94,15 +97,20 @@ app.get('/:id', (req, res) => {
 app.post('/', (req, res) => {
     var body = req.body;
 
+    var fecha = new Date();
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    console.log('Full fecha:',fulldateTime);
+
+    console.log('Esto recibi correo empresa', body);
     Rcorreo.create({
 
             descripcion: body.descripcion,
             fecha: body.fecha,
             hora: body.hora,
-            fkempresa: body.contactado,
-            fkusuario: body.id,
-            createdAt: body.createdAtLlamada,
-            updateAt:body.updateAtLlamada
+            fkempresa: body.fkempresa,
+            fkusuario: body.fkusuario,
+            createdAt: fulldateTime,
+            updateAt: fulldateTime
 
         })
         .then(correo => {

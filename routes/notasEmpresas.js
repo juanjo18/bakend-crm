@@ -70,7 +70,11 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     NotasEmpresas.findAll({
         where:{
             fkempresa: id,
-        }
+        },
+
+        order: [
+            ['id_nota', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(notas => {
         if (notas) {
             res.status(200).json({
@@ -93,11 +97,16 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-
+    var fecha = new Date();
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    
+    console.log('Nota de empresa recibida', body);
     NotasEmpresas.create({
-            comentario: body.descripcion,
-            fkusuario: body.id
-
+            comentario: body.comentario,
+            fkusuario: body.fkusuario,
+            fkempresa: parseInt(body.fkempresa),
+            createdAt: fulldateTime,
+            updatedAt: fulldateTime
         })
         .then(nota => {
             res.status(200).json({

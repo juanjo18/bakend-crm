@@ -61,7 +61,10 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     Rllamada.findAll({
         where:{
             fkcontacto: id,
-        }
+        },
+        order: [
+            ['id_llamada', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(llamadas => {
         if (llamadas) {
             res.status(200).json({

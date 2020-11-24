@@ -69,7 +69,10 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     Nota.findAll({
         where:{
             fkcontactos: id,
-        }
+        },
+        order: [
+            ['id_nota', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(notas => {
         console.log('Fecha',notas);
 

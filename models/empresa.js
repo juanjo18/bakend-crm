@@ -14,7 +14,8 @@ var Empresa = db.define('empresas', {
     pagina_corporativa:  { type: Sequelize.STRING, allowNull: false},
     propietario_registro: {type: Sequelize.INTEGER, allowNull: false},
     estado_region: {  type: Sequelize.STRING, allowNull: false},
-    codigo_postal: {type: Sequelize.STRING, allowNull: true}
+    codigo_postal: {type: Sequelize.STRING, allowNull: true},
+    createdAt: {type: Sequelize.STRING, allowNull: false}
 },
 { 
 	timestamps: false  //Para evitar que se creen los columnas de update y creacion

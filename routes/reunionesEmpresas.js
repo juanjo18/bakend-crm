@@ -37,7 +37,10 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     Rreuniones.findAll({
         where:{
             fkempresa: id,
-        }
+        },
+        order: [
+            ['id_regisreunion', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(reuniones => {
         if (reuniones) {
             res.status(200).json({
@@ -94,18 +97,21 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
+    var fecha = new Date();
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    
 
     Rreuniones.create({
 
-        descripcion: body.descripcionReunionEmpresas,
-        fkempresa: body.fkempresaReunionEmpresas,
-        resultado: body.resultadoReunionEmpresas,
-        fecha: body.fechaReunionEmpresas,
-        hora: body.horaReunionEmpresas,
-        duracion: body.duracionReunionEmpresas,
-        fkusuario: body.id,
-        createAt: body.createAtReunionEmpresas,
-        updateAt: body.createAtReunionEmpresas
+        descripcion: body.descripcion,
+        fkempresa: body.fkempresa,
+        resultado: body.resultado,
+        fecha: body.fecha,
+        hora: body.hora,
+        duracion: body.duracion,
+        fkusuario: body.fkusuario,
+        createdAt: fulldateTime,
+        updatedAt: fulldateTime
 
 
         })

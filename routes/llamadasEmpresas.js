@@ -34,7 +34,10 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     Rllamada.findAll({
         where:{
             fkempresa: id,
-        }
+        },
+        order: [
+            ['id_llamada', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(llamadas => {
         if (llamadas) {
             res.status(200).json({
@@ -89,20 +92,23 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-
+    console.log('Llamada empresa:', body);
+    var fecha = new Date();
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    
     Rllamada.create({
-        descripcion: body.descripcionLlamada,
-        fkempresa: body.empresaLlamada,
-        fecha: body.fechaLlamada,
-        hora: body.horaLlamada,
-        resultado_llamada: body.resultadoLlamada,
-        fkusuario: body.id,
-        createdAt: body.createdAtLlamada,
-        updateAt:body.updateAtLlamada
+        descripcion: body.descripcion,
+        fkempresa: body.fkempresa,
+        fecha: body.fecha,
+        hora: body.hora,
+        resultado_llamada: body.resultado_llamada,
+        fkusuario: body.fkusuario,
+        createdAt: fulldateTime,
+        updateAt: fulldateTime
         })
-        .then(llamadaempresas => {
+        .then(llamadaempresa => {
             res.status(200).json({
-                llamadaempresas: llamadaempresas,
+                llamadaempresa: llamadaempresa,
                 ok: 'true',
                 mensaje: 'Llamada agregada'
             })

@@ -37,7 +37,9 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     Rcorreo.findAll({
         where:{
             fkcontacto: id,
-        }
+        },order: [
+            ['id_rcorreo', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(correos => {
         if (correos) {
             res.status(200).json({

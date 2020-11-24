@@ -1,20 +1,20 @@
 const json = require('body-parser');
 var express = require('express');
 var app = express();
-var Negocio = require('../models/negociosContactos');
+var Negocio = require('../models/negociosEmpresas');
 var db = require('../config/database');
 var auth = require('../middlewares/autenticacion')
 
 
 // ==========================================
-//  Obtener negocios relacionados a un contacto
+//  Obtener negocios relacionados a una empresa
 // ==========================================
 
-app.get('/fkcontacto/:fkcontacto', auth.verificaToken, (req, res) => {
+app.get('/fkempresa/:fkempresa', auth.verificaToken, (req, res) => {
 
-    var fkcontacto = req.params.fkcontacto;
+    var fkempresa = req.params.fkempresa;
 
-    db.query('sp_negocios_contacto'+' '+fkcontacto).then(negocios => {
+    db.query('sp_negocios_empresa'+' '+fkempresa).then(negocios => {
         if (negocios) {
             res.status(200).json({
                 negocios: negocios[0]
@@ -24,7 +24,7 @@ app.get('/fkcontacto/:fkcontacto', auth.verificaToken, (req, res) => {
         else {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: "Error al recuperar los negocios de un solo contacto"
+                mensaje: "Error al recuperar los negocios de una sola empresa"
             })
         }
     })
@@ -32,14 +32,14 @@ app.get('/fkcontacto/:fkcontacto', auth.verificaToken, (req, res) => {
 
 
 // ==========================================
-//  Obtener negocios 
+//  Obtener negocios, 
 // ==========================================
 
 app.get('/negocios/', auth.verificaToken, (req, res) => {
 
     
 
-    db.query('sp_negocios').then(negocios => {
+    db.query('sp_negociosEmpresas').then(negocios => {
         if (negocios) {
             res.status(200).json({
                 negocios: negocios[0]
@@ -116,6 +116,7 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 app.post('/', auth.verificaToken, (req, res) => {
     var body = req.body;
     var fecha = new Date();
+    console.log('Negocio empresa:', body);
 
     var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
@@ -124,7 +125,7 @@ app.post('/', auth.verificaToken, (req, res) => {
             pipeline: body.pipeline,
             cantidad: body.cantidad,
             fketapa: body.fketapa,
-            fkcontacto: body.fkcontacto,
+            fkempresa: body.fkempresa,
             fkusuario:body.fkusuario,
             fcierre: (body.fcierre) +' '+fullHora,
             createdAt:fulldateTime,
@@ -141,7 +142,7 @@ app.post('/', auth.verificaToken, (req, res) => {
         .catch(err => {
             return res.status(500).json({
                 ok: 'false',
-                mensaje: 'Error al agregar empresa',
+                mensaje: 'Error al agregar negocio de la empresa',
                 errors: err
             })
         })
@@ -187,6 +188,7 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     
+    
     console.log('Editar negocio:', body);
 
     
@@ -197,7 +199,7 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
             pipeline: body.pipeline,
             cantidad: body.cantidad,
             fketapa: body.fketapa,
-            fkcontacto: body.fkcontacto,
+            fkempresa: body.fkempresa,
             fkusuario:body.fkusuario,
             fcierre: body.fcierre,
             updatedAt: fulldateTime

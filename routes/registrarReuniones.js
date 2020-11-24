@@ -62,7 +62,10 @@ app.get('/:id', auth.verificaToken, (req, res) => {
     Rreuniones.findAll({
         where:{
             fkcontacto: id,
-        }
+        },
+        order: [
+            ['id_regisreunion', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(reuniones => {
         if (reuniones) {
             res.status(200).json({

@@ -8,7 +8,7 @@ const { request } = require('./contactos');
 
 
 // ==========================================
-//  Obtener nombres, ids ...,  de todas las empresas
+//  Enlistar nombres, ids ...,  de todas las empresas
 // ==========================================
 
 app.get('/listaEmpresas', (req, res) => {
@@ -34,7 +34,7 @@ app.get('/listaEmpresas', (req, res) => {
 
 
 // ==========================================
-//  Return all enterprises from database
+//  Return 10 enterprises from database
 // ==========================================
 app.get('/paginacionEmpresas/:inicio', auth.verificaToken, (req, res) => {
     var inicio= req.params.inicio;
@@ -57,7 +57,7 @@ app.get('/paginacionEmpresas/:inicio', auth.verificaToken, (req, res) => {
 
 
 // ==========================================
-// Return all enterprises whith clause where id
+// Return 10 enterprises whith clause where id
 // ==========================================
 
 app.get('/paginacionMisEmpresas/:miId/:desde', auth.verificaToken, (req, res) => {
@@ -134,7 +134,7 @@ app.get('/contadorMisEmpresas/:miId', auth.verificaToken, (req, res) => {
 
 
 // ==========================================
-// Return a single enterprise with his id
+// Return a single enterprise with its id
 // ==========================================
 app.get('/:id', auth.verificaToken, (req, res) => {
 
@@ -166,12 +166,60 @@ app.get('/:id', auth.verificaToken, (req, res) => {
        })
 });
 
+
+
+// ==========================================
+//  Return all enterprises from database
+// ==========================================
+app.get('/todasLasEmpresas/lista', auth.verificaToken, (req, res) => {
+    
+    db.query('sp_empresas').then(empresas => {
+        if (empresas) {
+            res.status(200).json({
+                empresas: empresas[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los datos"
+            })
+        }
+    })
+});
+
+// ==========================================
+//  Return all my enterprises from database
+// ==========================================
+app.get('/todasMisEmpresas/lista/:id', auth.verificaToken, (req, res) => {
+
+    var id = parseInt( req.params.id);
+    db.query('sp_misEmpresas'+' '+id).then(empresas => {
+        if (empresas) {
+            res.status(200).json({
+                empresas: empresas[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los datos"
+            })
+        }
+    })
+});
+
 // ==========================================
 //  Create a new company
 // ==========================================
 app.post('/', auth.verificaToken, (req, res) => {
     console.log('backend');
     var body = req.body;
+    var fecha = new Date();
+    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    
     console.log(body);
 
     Empresa.create({
@@ -188,6 +236,7 @@ app.post('/', auth.verificaToken, (req, res) => {
         propietario_registro: body.propietario_registro,
         estado_region: body.estado_region,
         codigo_postal: body.codigo_postal,
+        createdAt: fulldateTime
     })
         .then(empresa => {
             res.status(200).json({
@@ -241,6 +290,7 @@ app.delete('/:id', auth.verificaToken, (req, res, next) => {
 app.put('/:id', auth.verificaToken, (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
+    console.log('actualizar empresa: ', body);
 
     Empresa.update({
         nombre: body.nombre,
@@ -253,7 +303,6 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
         no_telefono: body.no_telefono,
         zona_horaria: body.zona_horaria,
         pagina_corporativa: body.pagina_corporativa,
-        propietario_registro: body.propietario_registro,
         estado_region: body.estado_region,
         codigo_postal: body.codigo_postal,
     }, {

@@ -5,11 +5,11 @@ var LlamadasEmpresas = db.define('llamadas_empresas', {
     descripcion: { type: Sequelize.STRING, allowNull: false },
     fkempresa: { type: Sequelize.STRING, allowNull: false },
     resultado_llamada: { type: Sequelize.STRING, allowNull: false },
-    fecha: { type: Sequelize.DATEONLY, allowNull: false },
+    fecha: { type: Sequelize.STRING, allowNull: false },
     hora: { type: Sequelize.STRING, allowNull: false },
     fkusuario: { type: Sequelize.INTEGER, allowNull: false },
-    createdAt:{ type: Sequelize.DATEONLY,allowNull:false},
-    updateAt:{ type: Sequelize.DATEONLY,allowNull:true}
+    createdAt:{ type: Sequelize.STRING,allowNull:false},
+    updatedAt:{ type: Sequelize.STRING,allowNull:true}
 
 }, {
     timestamps: false //Para evitar que se creen los columnas de update y creacion

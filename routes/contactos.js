@@ -7,8 +7,9 @@ var db = require('../config/database');
 var body = require('body-parser');
 
 
+
 // ==========================================
-//  Return all contacts from database
+//  Return 10 contacts from database
 // ==========================================
 
 app.get('/paginacionContactos/:inicio', auth.verificaToken, (req, res) => {
@@ -30,6 +31,9 @@ app.get('/paginacionContactos/:inicio', auth.verificaToken, (req, res) => {
         }
     })
 });
+
+
+
 
 // ==========================================
 //  Contar numero de contactos
@@ -194,6 +198,55 @@ app.get('/consultaContacto/:id', auth.verificaToken, (req, res) => {
         })
 });
 
+
+// ==========================================
+//  Obtener todos los contactos
+// ==========================================
+app.get('/', auth.verificaToken, (req, res) => {
+
+
+    db.query('sp_todosLosContactos').then(contactos => {
+        if (contactos) {
+            res.status(200).json({
+                contactos: contactos[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los contactos"
+            })
+        }
+    })
+});
+
+
+// ==========================================
+//  Obtener todos mis contactos
+// ==========================================
+app.get('/todosMisContactos/:miId', auth.verificaToken, (req, res) => {
+
+    var miId = req.params.miId;
+
+    db.query('sp_todosMisContactos'+' '+miId).then(contactos => {
+        if (contactos) {
+            res.status(200).json({
+                contactos: contactos[0]
+            })
+        }
+
+        else {
+            return res.status(500).json({
+                ok: 'false',
+                mensaje: "Error al recuperar los contactos"
+            })
+        }
+    })
+});
+ 
+
+
 // ==========================================
 //  Create a new contact
 // ==========================================
@@ -276,7 +329,7 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
         telefono: body.telefono,
         departamento: body.departamento,
         propietario_registro: body.propietario,
-        fkempresa: body.empresa,
+        fkempresa: body.fkempresa,
         ultima_actividad: body.ultima
     }, {
         where: {
