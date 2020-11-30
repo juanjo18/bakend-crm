@@ -126,7 +126,7 @@ app.post('/', (req, res) => {
     var fecha = new Date();
     console.log('intento imprimir fkContacto',body.fkcontacto);
 
-    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 
     Rreuniones.create({

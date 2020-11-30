@@ -96,7 +96,7 @@ app.get('/:id', (req, res) => {
 app.post('/', (req, res) => {
     var body = req.body;
     var fecha = new Date();
-    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     console.log('FullDateTime',fulldateTime);
     var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     console.log('Esto recibo', body);

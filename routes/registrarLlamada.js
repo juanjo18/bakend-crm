@@ -122,7 +122,7 @@ app.post('/', (req, res) => {
 
     console.log('esto recibo para llamada', body);
 var fecha = new Date();
-var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 console.log('FullDateTime',fulldateTime);
 

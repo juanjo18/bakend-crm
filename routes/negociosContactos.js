@@ -117,7 +117,7 @@ app.post('/', auth.verificaToken, (req, res) => {
     var body = req.body;
     var fecha = new Date();
 
-    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     Negocio.create({
             nombre_negocio: body.nombre_negocio,
@@ -185,7 +185,7 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
     var fecha = new Date();
-    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     
     console.log('Editar negocio:', body);
 

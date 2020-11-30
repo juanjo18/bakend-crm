@@ -98,7 +98,7 @@ app.post('/', (req, res) => {
     var body = req.body;
 
     var fecha = new Date();
-    var fulldateTime = fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     console.log('Full fecha:',fulldateTime);
 
     console.log('Esto recibi correo empresa', body);
