@@ -23,9 +23,8 @@ app.post('/', (req, resp) => {
                 })
             }
             else{
-
                 var d = new Date();
-                var calculatedExpiresIn = (((d.getTime()) + (60 * 60 * 1000)) - (d.getTime() - d.getMilliseconds()) / 1000);
+                var calculatedExpiresIn = Math.floor(Date.now()) + (60 * 60*1000);
                 var token = jwt.sign({ usuario: usuario.dataValues.id_usuario,"iat": (new Date().getTime()) }, SEED, {expiresIn: calculatedExpiresIn}) 
                
                 resp.status(200).json({

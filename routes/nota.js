@@ -74,7 +74,6 @@ app.get('/:id', auth.verificaToken, (req, res) => {
             ['id_nota', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
       ]
     }).then(notas => {
-        console.log('Fecha',notas);
 
         // var fecha = Fecha.notas.dataValues.createdAt;
         // console.log(fecha.getDay());

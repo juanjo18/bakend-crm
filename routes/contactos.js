@@ -89,11 +89,9 @@ app.get('/contadorMisContactos/:miId', auth.verificaToken, (req, res) => {
 
 app.get('/miscontactos/:miId/:desde', auth.verificaToken, (req, res) => {
 
-    console.log('Ejecutando peticion');
     var miId = req.params.miId;
     var desde = req.params.desde;
     
-    console.log('Ejecutando peticion');
 
     db.query('sp_paginacionMisContactos'+' '+miId+','+''+ desde).then(misContactos => {
         if (misContactos) {
@@ -141,7 +139,7 @@ app.get('/miscontactos/:miId/:desde', auth.verificaToken, (req, res) => {
 app.get('/relacionados/:miId', auth.verificaToken, (req, res) => {
 
     var miId = req.params.miId;
-    console.log(miId)
+    
     Contacto.findAll({
         where: {
             fkempresa: parseInt(miId),
@@ -169,7 +167,6 @@ app.get('/relacionados/:miId', auth.verificaToken, (req, res) => {
 app.get('/consultaContacto/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-    console.log('id C Recibido', id);
     Contacto.findOne({
         where: {
             id_contacto: id
@@ -177,6 +174,7 @@ app.get('/consultaContacto/:id', auth.verificaToken, (req, res) => {
     })
         .then(unContacto => {
             if (unContacto) {
+                console.log('Un contacto ---',unContacto);
                 res.status(200).json({
                     ok: 'true',
                     unContacto: unContacto
@@ -255,7 +253,6 @@ app.post('/', auth.verificaToken, (req, res) => {
     var body = req.body;
     var fecha = new Date();
 
-    console.log(body);
     Contacto.create({
         nombre: body.nombre,
         apellido: body.apellido,
@@ -319,16 +316,13 @@ app.delete('/:id', auth.verificaToken, (req, res, next) => {
 app.put('/:id', auth.verificaToken, (req, res, next) => {
     var id = req.params.id;
     var body = req.body;
-    console.log('info para editar Contactos', body);
-    console.log(body.email);
-
+    
     Contacto.update({
         nombre: body.nombre,
         apellido: body.apellido,
         email: body.email,
         telefono: body.telefono,
         departamento: body.departamento,
-        propietario_registro: body.propietario,
         fkempresa: body.fkempresa,
         ultima_actividad: body.ultima
     }, {
@@ -350,4 +344,32 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
             })
         })
 });
+
+app.put('/ultima/:id/:fecha',  auth.verificaToken, (req, res, next) => {
+    var id = req.params.id;
+    var ultima = req.params.fecha;
+    var body = req.body;
+    
+    Contacto.update({
+        ultima_actividad: ultima
+    }, {
+        where: {
+            id_contacto: id
+        }
+    }).then(result => {
+        res.status(200).json({
+            ok: 'true',
+            mensaje: 'Contacto actualizado',
+            result: result
+        })
+    })
+        .catch(err => {
+            res.status(400).json({
+                ok: 'false',
+                mensaje: 'Error al actualizar contacto',
+                error: err
+            })
+        })
+});
+
 module.exports = app;

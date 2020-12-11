@@ -1,5 +1,6 @@
 const express = require("express");
 var bodyParser = require('body-parser');
+
 // Inicializar app
 const app = express();
 
@@ -11,10 +12,14 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+global.__basedir = __dirname;
+
 //Bodyparser
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 
 // Conexion base de datos
 const db = require('./config/database');
@@ -50,10 +55,14 @@ var negocioContactoRoutes = require('./routes/negociosContactos');
 var negocioEmpresaRoutes = require('./routes/negociosEmpresas');
 var enviarCorreoRoutes = require('./routes/enviarCorreo');
 var recuperarPasswordRoutes = require('./routes/recuperarPassword');
+var resetPasswordRoutes = require('./routes/resetPassword');
+var busquedaRoutes = require('./routes/busqueda');
+var filesUploadRoutes = require('./routes/files');
+var configurarCorreo = require ('./routes/configurarCorreo');
 //Rutas -> Middleware
 
 app.use('/contactos', contactosRoutes);
-app.use('/usuarios', usuariosRoutes);
+app.use('/usuarios', usuariosRoutes); 
 app.use('/login', loginRoutes);
 app.use('/empresas', empresaRoutes);
 app.use('/rcorreos', registrarCorreoRoutes);
@@ -70,4 +79,8 @@ app.use('/negociosContactos', negocioContactoRoutes);
 app.use('/negociosEmpresas', negocioEmpresaRoutes);
 app.use('/enviarCorreo', enviarCorreoRoutes);
 app.use('/recuperarPassword', recuperarPasswordRoutes);
+app.use('/resetPassword', resetPasswordRoutes);
+app.use('/busqueda',busquedaRoutes);
+app.use('/upload', filesUploadRoutes);
+app.use('/configurarCorreo',configurarCorreo);
 app.use('/', appRoutes);

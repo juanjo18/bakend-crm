@@ -4,7 +4,9 @@ var app = express();
 var Usuario = require('../models/usuario');
 var auth = require('../middlewares/autenticacion');
 var db = require('../config/database');
-
+const Sequelize = require('Sequelize');
+var jwt = require('jsonwebtoken');
+var Op = Sequelize.Op;
 // Par encriptar la contraseña
 var bcrypt = require('bcryptjs');
 // var jwt = require('jsonwebtoken');
@@ -158,6 +160,45 @@ app.put('/:id', auth.verificaToken, (req, res) =>{
     })
 });
 
+//actualizar password
+
+app.put('/cambiar/:password/:id/',  auth.verificaToken,(req, res) =>{
+    var id = req.params.id;
+    var pass= req.params.password;   
+    
+    console.log('Actualizar password del Usuario', id,pass);
+    Usuario.update(
+        {
+            password: bcrypt.hashSync(pass)
+        },
+
+        { where: {
+            id_usuario : id
+        }}
+    )
+    .then(resultado => {
+        if(resultado){
+            res.status(200).json({
+                ok: 'true',
+                mensaje: 'Usuario actualizado'
+            })
+        }
+        else{
+            return res.status(400).json({
+                ok: 'false',
+                mensaje: 'No se encuentra el usuario'
+            })
+        }
+    })
+    .catch(err =>{
+        return res.status(500).json({
+            ok: 'false',
+            mensaje: 'Error al actualizar el usuario'
+        })
+    })
+});
+
+
 // ==========================================
 //  Delete an user
 // ==========================================
@@ -182,6 +223,43 @@ app.delete('/:id',  auth.verificaToken, (req, res) =>{
             error: err
         })
     })
+});
+
+
+app.post('/password/:id/:pass/', (req, resp) => {
+    var body = req.body;
+    var passA = req.params.pass;
+    var id = req.params.id;
+    Usuario.findOne({
+        where: {
+            id_usuario: id
+        }
+    })
+    .then(usuario =>{
+        if(usuario){
+            if(!bcrypt.compareSync(passA, usuario.dataValues.password)){
+                resp.status(400).json({
+                    ok: 'false',
+                    mensaje: 'Error, contraseña incorrecta'
+                })
+            }
+            else{
+               
+                resp.status(200).json({
+                    ok: 'true',
+                    usuario: usuario
+                    
+                })
+            }
+        }
+        else{
+            return resp.status(400).json({
+                ok: 'false',
+                mensaje: 'Correo no existente'
+            })
+        }
+    })
+    .catch(err => console.log(err))
 });
 
 module.exports = app;

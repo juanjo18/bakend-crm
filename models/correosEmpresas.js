@@ -9,8 +9,6 @@ var RegistrarCorreo = db.define('correos_empresas', {
     fkusuario: { type: Sequelize.INTEGER, allowNull: false },
     createdAt:{ type: Sequelize.STRING,allowNull:false},
     updatedAt:{ type: Sequelize.STRING,allowNull:true}
-
-
 }, {
     timestamps: false //Para evitar que se creen los columnas de update y creacion
 });

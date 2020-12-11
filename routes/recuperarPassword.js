@@ -7,8 +7,6 @@ var SEED = require('../config/config').SEED;
 
 const nodemailer = require("nodemailer");
 
-
-
 var emailEnviado = false;
 
 app.post('/', (req, res) => {
@@ -32,46 +30,39 @@ app.post('/', (req, res) => {
                     pass: "Osorio.JJ.20"
                 },
             })
-        
-            // + req.headers.host + 
 
-            var d = new Date();
-                var calculatedExpiresIn = (((d.getTime()) + (5 * 60 * 1000)) - (d.getTime() - d.getMilliseconds()) / 1000);
-                var token = jwt.sign({ email,"iat": (new Date().getTime()) }, SEED, {expiresIn: calculatedExpiresIn}) 
+            var token = jwt.sign({ email, }, 'secretKey', { expiresIn: '3600s' });
 
-                console.log('Expires', calculatedExpiresIn);
-               
-        
             var mailOptions = {
                 from: '"Clicksoft" <soporte@clicksoft.com.mx>',
                 to: email,
                 subject: "Recuperación de contraseña",
                 subject: "Restablecimiento de contraseña",
-                text: 'Estás recibiendo este correo por tú (o alguien más) ha solicitado restablecer la contraseña para tu cuenta.\n\n' +
-                 'Por favor haz click en el siguiente enlace, o copia y pega en tu navegador para completar el proceso\n\n' +
-                 'http://localhost:4200/reset/'+token +  '\n\n' +
-                 'Si tu no lo solicitaste, por favor ignora este correo y tu contraseña permanecerá sin cambios.\n'
+                text: 'Estás recibiendo este correo porque tú (o alguien más) ha solicitado restablecer la contraseña para tu cuenta.\n\n' +
+                    'Por favor haz click en el siguiente enlace, o copia y pega en tu navegador para completar el proceso\n\n' +
+                    'Dispone de una hora para realizar el cambio, pasada la hora deberá realizar una nueva solicitud de cambio de contraseña\n\n' +
+                    'http://localhost:4200/reset/' + token + '\n\n' +
+                    'Nota: Si tu no lo solicitaste, por favor ignora este correo y la contraseña permanecerá sin cambios.\n'
             }
-           
-            transporter.sendMail(mailOptions, (error, info) =>{
-                if(error){
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
                     console.log(error);
                 }
-                else{
-                   console.log('Correo enviado');
-                   emailEnviado = true;
+                else {
+                    console.log('Correo enviado');
+                    emailEnviado = true;
                 }
             })
 
-            if(emailEnviado=true){
-                
+            if (emailEnviado = true) {
+
                 return res.status(200).json({
                     ok: 'true',
                     mensaje: "correo enviado",
-                    tokenReset: token,
-                    expiresIn: calculatedExpiresIn
                 })
             }
+
         }
 
         else {

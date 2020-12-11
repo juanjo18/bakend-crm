@@ -7,8 +7,8 @@ var Nota = db.define('notas_empresas', {
     comentario: { type: Sequelize.STRING, allowNull: false },
     fkusuario: { type: Sequelize.STRING, allowNull: false },
     fkempresa: {type: Sequelize.INTEGER, allowNull:false},
-    createdAt:{type: Sequelize.DATEONLY,allowNull:false},
-    updatedAt:{type: Sequelize.DATEONLY,allowNull:true}
+    createdAt:{type: Sequelize.STRING,allowNull:false},
+    updatedAt:{type: Sequelize.STRING,allowNull:true}
 }, {
     timestamps: false
 });
