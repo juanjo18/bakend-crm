@@ -86,6 +86,7 @@ app.post('/send', (req, res) => {
                     var fecha = new Date();
                     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
                     var fullHour = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+                    
 
                     CorreoEnviado.create({
                         
@@ -166,22 +167,28 @@ app.get('/reporte', auth.verificaToken, (req, res) => {
 //  PENDIENTE PENDIENTE PENDIENTE PENDIENTE
 // ==========================================
 
-// app.get('/', (req, res) => {
+app.get('/enviados/:fkcontacto', (req, res) => {
 
-//     EnviarCorreo.findAll().then(eCorreos => {
-//         if (eCorreos) {
-//             res.status(200).json({
-//                 ok: true,
-//                 Correo: eCorreos
-//             })
-//         } else {
-//             return res.status(500).json({
-//                 ok: false,
-//                 mensaje: 'Error al recuperar correos'
-//             })
-//         }
-//     })
-// });
+    var fkcontacto = req.params.fkcontacto;
+    console.log("Fk contacto", fkcontacto);
+    CorreoEnviado.findAll({
+        where: {
+            fkcontacto: fkcontacto
+        }
+    }).then(eCorreos => {
+        if (eCorreos) {
+            console.log(eCorreos);
+            res.status(200).json({
+                eCorreos: eCorreos
+            })
+        } else {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al recuperar correos'
+            })
+        }
+    })
+});
 
 
 // // ==========================================

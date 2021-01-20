@@ -131,7 +131,7 @@ app.post('/', (req, res) => {
 // ==========================================
 //  Borra correo
 // ==========================================
-app.delete('/:id', (req, res, next) => {
+app.delete('/:id',auth.verificaToken, (req, res, next) => {
 
     var id = req.params.id;
 

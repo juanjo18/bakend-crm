@@ -163,7 +163,7 @@ app.post('/', (req, res) => {
 //  Borrar reunion
 // ==========================================
 
-app.delete('/:id', (req, res, next) => {
+app.delete('/:id', auth.verificaToken, (req, res, next) => {
 
     var id = req.params.id;
 

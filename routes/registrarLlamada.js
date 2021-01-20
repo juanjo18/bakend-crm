@@ -159,7 +159,7 @@ console.log('Descipcion',body.descripcion);
 //  Borrar Llamada
 // ==========================================
 
-app.delete('/:id', (req, res, next) => {
+app.delete('/:id',  auth.verificaToken, (req, res, next) => {
 
     var id = req.params.id;
 
