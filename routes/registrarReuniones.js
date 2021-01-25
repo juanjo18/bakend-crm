@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+     //console.log(id)
     Rreuniones.findAll({
         where:{
             fkcontacto: id,
@@ -122,9 +122,9 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-    console.log('Esto estoy recibiendo: ',body);
+    //console.log('Esto estoy recibiendo: ',body);
     var fecha = new Date();
-    console.log('intento imprimir fkContacto',body.fkcontacto);
+    //console.log('intento imprimir fkContacto',body.fkcontacto);
 
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();

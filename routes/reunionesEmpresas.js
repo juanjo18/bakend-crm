@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+    // console.log(id)
     Rreuniones.findAll({
         where:{
             fkempresa: id,

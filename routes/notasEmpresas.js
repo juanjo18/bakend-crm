@@ -66,7 +66,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+     //console.log(id)
     NotasEmpresas.findAll({
         where:{
             fkempresa: id,
@@ -100,9 +100,9 @@ app.post('/', (req, res) => {
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     
-    console.log('Mes Num',fecha.getMonth()+1);
+    //console.log('Mes Num',fecha.getMonth()+1);
 
-    console.log('Nota de empresa recibida', body);
+   // console.log('Nota de empresa recibida', body);
     NotasEmpresas.create({
             comentario: body.comentario,
             fkusuario: body.fkusuario,

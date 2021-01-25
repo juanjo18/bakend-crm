@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+    // console.log(id)
     EtapaNegocio.findAll({
         where:{
             fkempresa: id,
@@ -93,7 +93,7 @@ app.post('/', (req, res) => {
 var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 
-console.log('FullDateTime',fulldateTime);
+//console.log('FullDateTime',fulldateTime);
 
     EtapaNegocio.create({
         descripcion: body.descripcionLlamada,
@@ -159,7 +159,7 @@ app.put('/:id', (req, res, next) => {
     
     var id = req.params.id;
     var body = req.body;
-    console.log('Recibido',body);
+   // console.log('Recibido',body);
     var fecha = new Date();
     EtapaNegocio.update({
             nombre: body.nombre,

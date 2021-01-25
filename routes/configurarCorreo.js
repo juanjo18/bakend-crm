@@ -10,7 +10,7 @@ var crypto = require('crypto');
 app.get('/', auth.verificaToken, (req, res) => {
 
     var id = req.query.id;
-console.log(id)
+//console.log(id)
     Configura.findAll({
         attributes: ['host', 'email'],
         where: {
@@ -19,7 +19,7 @@ console.log(id)
     }
     ).then(configuracion => {
 
-        console.log('conf', configuracion.length)
+        //console.log('conf', configuracion.length)
 
         if(configuracion.length == 0){
             res.status(200).json({
@@ -34,7 +34,7 @@ console.log(id)
             })
         }
 
-        console.log(configuracion[0]);
+        //console.log(configuracion[0]);
         res.status(200).json({
             ok: true,
             mensaje: 'Configuracion existente',
@@ -53,12 +53,13 @@ console.log(id)
 
 
 app.post('/', auth.verificaToken, (req, res) => {
+    console.log("Create");
 
     var body = req.body;
     var mykey = crypto.Cipher('aes-128-cbc', 'mypassword');
     var passwordEncripted = mykey.update(body.password, 'utf8', 'hex')
     passwordEncripted += mykey.final('hex');
-    console.log('Encriptado:', passwordEncripted);
+    //console.log('Encriptado:', passwordEncripted);
 
 
     Configura.create({
@@ -69,7 +70,7 @@ app.post('/', auth.verificaToken, (req, res) => {
         fk_usuario: body.fkusuario
     })
         .then(configuracion => {
-            console.log('Datos guardados');
+            //console.log('Datos guardados');
             res.status(200).json({
                 ok: 'true',
                 mensaje: 'configuracion creada',
@@ -85,6 +86,7 @@ app.post('/', auth.verificaToken, (req, res) => {
 
 app.put('/', auth.verificaToken, (req, res, next) => {
     
+    console.log("Update");
     var body = req.body;
 
     var mykey = crypto.Cipher('aes-128-cbc', 'mypassword');
@@ -92,11 +94,9 @@ app.put('/', auth.verificaToken, (req, res, next) => {
     passwordEncripted += mykey.final('hex');
    
     Configura.update({
-
         host: body.host,  
         email: body.email,
         password: passwordEncripted
-
         }, {
             where: {
                 fk_usuario: body.fkusuario

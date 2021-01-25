@@ -36,7 +36,7 @@ app.get('/contadorUsuarios', auth.verificaToken, (req, res) => {
 
 
 app.get('/paginacionUsuarios/:desde',  auth.verificaToken,  (req, res, next) => {
-    console.log("Estas en el backp");
+    //console.log("Estas en el backp");
     
     var desde = req.params.desde;
     Usuario.findAndCountAll({
@@ -126,7 +126,7 @@ app.put('/:id', auth.verificaToken, (req, res) =>{
     var id = req.params.id;
     var body = req.body;
     
-    console.log('Actualizar Usuario', body);
+   // console.log('Actualizar Usuario', body);
     Usuario.update(
         {
             nombre: body.nombre,
@@ -166,7 +166,7 @@ app.put('/cambiar/:password/:id/',  auth.verificaToken,(req, res) =>{
     var id = req.params.id;
     var pass= req.params.password;   
     
-    console.log('Actualizar password del Usuario', id,pass);
+    //console.log('Actualizar password del Usuario', id,pass);
     Usuario.update(
         {
             password: bcrypt.hashSync(pass)
@@ -259,7 +259,9 @@ app.post('/password/:id/:pass/', (req, resp) => {
             })
         }
     })
-    .catch(err => console.log(err))
+    .catch(err =>
+        console.log(err)
+    )        
 });
 
 module.exports = app;

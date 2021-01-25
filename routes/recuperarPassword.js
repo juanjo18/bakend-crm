@@ -14,13 +14,13 @@ app.post('/', (req, res) => {
     var body = req.body;
     var email = body.email;
 
-    console.log(email);
+   // console.log(email);
 
     db.query('sp_recuperaPassword' + ' ' + "'" + email + "'").then(usuario => {
 
         if (usuario[0].length != 0) {
 
-            console.log('Se está mandando el correo');
+           // console.log('Se está mandando el correo');
             var transporter = nodemailer.createTransport({
                 host: "smx10.hostdime.com.mx",
                 port: 587,
@@ -41,16 +41,16 @@ app.post('/', (req, res) => {
                 text: 'Estás recibiendo este correo porque tú (o alguien más) ha solicitado restablecer la contraseña para tu cuenta.\n\n' +
                     'Por favor haz click en el siguiente enlace, o copia y pega en tu navegador para completar el proceso\n\n' +
                     'Dispone de una hora para realizar el cambio, pasada la hora deberá realizar una nueva solicitud de cambio de contraseña\n\n' +
-                    'http://localhost:4200/reset/' + token + '\n\n' +
+                    'http://192.168.49.15:8081/#/reset/' + token + '\n\n' +
                     'Nota: Si tu no lo solicitaste, por favor ignora este correo y la contraseña permanecerá sin cambios.\n'
             }
 
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    console.log(error);
+                 //   console.log(error);
                 }
                 else {
-                    console.log('Correo enviado');
+                  //  console.log('Correo enviado');
                     emailEnviado = true;
                 }
             })
@@ -66,7 +66,7 @@ app.post('/', (req, res) => {
         }
 
         else {
-            console.log('Falló');
+            //console.log('Falló');
             return res.status(500).json({
                 ok: 'false',
                 mensaje: "El usuario no existe"

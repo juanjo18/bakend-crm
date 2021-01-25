@@ -6,6 +6,7 @@ var db = require('../config/database');
 var crypto = require('crypto');
 var auth = require('../middlewares/autenticacion');
 var CorreoEnviado = require('../models/enviarCorreo');
+var Contacto = require ('../models/contacto');
 
 
 var host;
@@ -28,13 +29,7 @@ app.post('/send', (req, res) => {
     var fkcontacto = req.body.fkcontacto;
     var fkusuario = req.body.fkusuario
 
-    console.log(remitente);
-    console.log(destinatario);
-    console.log(asunto);
-    console.log(descripcionCorreo);
-    console.log(remitenteNombre);
-    console.log('Fk contacto: ',fkcontacto);
-    console.log('Fk usuario' ,fkusuario);
+    
 
 
     db.query('sp_configuracionCorreo' + ' "' + remitente + '"').then(configuracion => {
@@ -44,7 +39,7 @@ app.post('/send', (req, res) => {
             user = remitente;
             psw = configuracion[0][0].password;
 
-            console.log('Configuración', host, puerto, user, psw);
+            //console.log('Configuración', host, puerto, user, psw);
 
             var mykey = crypto.Decipher('aes-128-cbc', 'mypassword');
             var psw = mykey.update(psw, 'hex', 'utf8')
@@ -100,26 +95,44 @@ app.post('/send', (req, res) => {
                         fkusuario: fkusuario
 
                     })
+                    
+                   
+                  
                         .then(configuracion => {
-                            console.log('Datos guardados');
-                            console.log(configuracion);
-                            // res.status(200).json({
-                            //     ok: 'true',
-                            //     mensaje: 'configuracion creada',
-                            // })
+
+
+                            Contacto.update({
+                                
+                                ultima_actividad: fulldateTime
+                            }, {
+                                where: {
+                                    id_contacto: fkcontacto
+                                }
+                            }).then(result => {
+                                
+                            })
+                                .catch(err => {
+                                   
+                                })
+
+                         
                         })
                         .catch(err => {
-                            console.log('Error al guardar los datos');
+                            //console.log('Error al guardar los datos');
                             // return res.status(400).json({
                             //     ok: 'false',
                             //     mensaje: 'Error al guardar la configuracion'
                             // })
                         })
+                        
+                       
 
-                    console.log('Correo enviado');
+                   // console.log('Correo enviado');
                     return res.status(200).json({
                         ok: true,
                         mensaje: 'Correo enviado'
+
+                        
                     })
 
                 }
@@ -127,7 +140,7 @@ app.post('/send', (req, res) => {
         }
 
         else {
-            console.log('Error al obtener configuracion de correo');
+           // console.log('Error al obtener configuracion de correo');
             return res.status(500).json({
                 ok: 'false',
                 mensaje: "Error al recuperar los datos de configuración del correo"
@@ -141,7 +154,7 @@ app.post('/send', (req, res) => {
 
 
 // ==========================================
-//  Return all last calls from database
+//  Return all last emails sent from database
 // ==========================================
 
 app.get('/reporte', auth.verificaToken, (req, res) => {
@@ -149,7 +162,7 @@ app.get('/reporte', auth.verificaToken, (req, res) => {
     db.query('sp_reporteCorreos').then(reporteCorreos => {
         if (reporteCorreos) {
             res.status(200).json({
-                mensaje: 'Llamadas realizadas',
+                mensaje: 'Correos enviados',
                 reporteCorreos: reporteCorreos[0]
             })
         }
@@ -170,14 +183,17 @@ app.get('/reporte', auth.verificaToken, (req, res) => {
 app.get('/enviados/:fkcontacto', (req, res) => {
 
     var fkcontacto = req.params.fkcontacto;
-    console.log("Fk contacto", fkcontacto);
+    //console.log("Fk contacto", fkcontacto);
     CorreoEnviado.findAll({
         where: {
             fkcontacto: fkcontacto
-        }
+        },
+        order: [
+            ['id_correo', 'DESC'], // Sorts by COLUMN_NAME_EXAMPLE in ascending order
+      ]
     }).then(eCorreos => {
         if (eCorreos) {
-            console.log(eCorreos);
+            //console.log(eCorreos);
             res.status(200).json({
                 eCorreos: eCorreos
             })

@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+     //console.log(id)
     Rllamada.findAll({
         where:{
             fkempresa: id,
@@ -92,7 +92,7 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 // ==========================================
 app.post('/', (req, res) => {
     var body = req.body;
-    console.log('Llamada empresa:', body);
+   // console.log('Llamada empresa:', body);
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     

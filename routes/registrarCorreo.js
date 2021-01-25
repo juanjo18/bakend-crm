@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+     //console.log(id)
     Rcorreo.findAll({
         where:{
             fkcontacto: id,
@@ -97,9 +97,9 @@ app.post('/', (req, res) => {
     var body = req.body;
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-    console.log('FullDateTime',fulldateTime);
+    //console.log('FullDateTime',fulldateTime);
     var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-    console.log('Esto recibo', body);
+    //console.log('Esto recibo', body);
     Rcorreo.create({
 
             descripcion: body.descripcion,

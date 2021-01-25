@@ -10,7 +10,7 @@ var SEED = require('../config/config').SEED;
 app.put('/', verifyToken, (req, res) => {
 
     var password = req.body.password;
-    console.log('Entra al put');
+    //console.log('Entra al put');
     jwt.verify(req.token, 'secretKey', (error, authData) => {
         if (error) {
             res.status(403).json({
@@ -19,7 +19,7 @@ app.put('/', verifyToken, (req, res) => {
         }
         else {
 
-            console.log(authData.email);
+          //  console.log(authData.email);
             Usuario.update(
                 {
                     password: bcrypt.hashSync(password, 10)
@@ -57,12 +57,12 @@ app.put('/', verifyToken, (req, res) => {
 //Authotization: Bearer <token>
 function verifyToken(req, res, next) {
 
-    console.log('Verify token');
+    //console.log('Verify token');
     var bearerHeader = req.body.tokenReset;
 
-    console.log('Longitud',bearerHeader.length);
+   // console.log('Longitud',bearerHeader.length);
 
-    console.log('Bearer token obtenido', bearerHeader);
+   // console.log('Bearer token obtenido', bearerHeader);
     if (typeof bearerHeader !== 'undefined') {
         const bearerToken = bearerHeader.split(" ")[1];
         req.token = bearerToken;

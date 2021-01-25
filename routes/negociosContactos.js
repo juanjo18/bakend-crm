@@ -187,7 +187,7 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     
-    console.log('Editar negocio:', body);
+    //console.log('Editar negocio:', body);
 
     
     var fecha = new Date();

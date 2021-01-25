@@ -18,7 +18,7 @@ global.__basedir = __dirname;
 //Bodyparser
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 
 
 // Conexion base de datos
@@ -57,7 +57,6 @@ var enviarCorreoRoutes = require('./routes/enviarCorreo');
 var recuperarPasswordRoutes = require('./routes/recuperarPassword');
 var resetPasswordRoutes = require('./routes/resetPassword');
 var busquedaRoutes = require('./routes/busqueda');
-var filesUploadRoutes = require('./routes/files');
 var configurarCorreo = require ('./routes/configurarCorreo');
 //Rutas -> Middleware
 
@@ -81,6 +80,5 @@ app.use('/enviarCorreo', enviarCorreoRoutes);
 app.use('/recuperarPassword', recuperarPasswordRoutes);
 app.use('/resetPassword', resetPasswordRoutes);
 app.use('/busqueda',busquedaRoutes);
-app.use('/upload', filesUploadRoutes);
 app.use('/configurarCorreo',configurarCorreo);
 app.use('/', appRoutes);

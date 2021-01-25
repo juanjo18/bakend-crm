@@ -100,7 +100,7 @@ app.post('/', (req, res) => {
     var body = req.body;
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-    console.log('FullDateTime',fulldateTime);
+   // console.log('FullDateTime',fulldateTime);
     
     Nota.create({
             comentario: body.comentario,  

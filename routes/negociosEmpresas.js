@@ -116,7 +116,7 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 app.post('/', auth.verificaToken, (req, res) => {
     var body = req.body;
     var fecha = new Date();
-    console.log('Negocio empresa:', body);
+    //console.log('Negocio empresa:', body);
 
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
@@ -189,7 +189,7 @@ app.put('/:id', auth.verificaToken, (req, res, next) => {
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     
     
-    console.log('Editar negocio:', body);
+   // console.log('Editar negocio:', body);
 
     
     var fecha = new Date();

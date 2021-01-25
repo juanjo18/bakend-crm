@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+     //console.log(id)
     Rllamada.findAll({
         where:{
             fkcontacto: id,
@@ -120,13 +120,13 @@ app.get('/:id', auth.verificaToken, (req, res) => {
 app.post('/', (req, res) => {
     var body = req.body;
 
-    console.log('esto recibo para llamada', body);
+   // console.log('esto recibo para llamada', body);
 var fecha = new Date();
 var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 var fullHora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-console.log('FullDateTime',fulldateTime);
+//console.log('FullDateTime',fulldateTime);
 
-console.log('Descipcion',body.descripcion);
+//console.log('Descipcion',body.descripcion);
     Rllamada.create({
 
         descripcion: body.descripcion,

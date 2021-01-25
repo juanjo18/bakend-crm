@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 app.get('/:id', auth.verificaToken, (req, res) => {
 
     var id = req.params.id;
-     console.log(id)
+     //console.log(id)
     Rcorreo.findAll({
         where:{
             fkempresa: id,
@@ -99,9 +99,9 @@ app.post('/', (req, res) => {
 
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-    console.log('Full fecha:',fulldateTime);
+    //console.log('Full fecha:',fulldateTime);
 
-    console.log('Esto recibi correo empresa', body);
+    //console.log('Esto recibi correo empresa', body);
     Rcorreo.create({
 
             descripcion: body.descripcion,

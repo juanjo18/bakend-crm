@@ -174,7 +174,7 @@ app.get('/consultaContacto/:id', auth.verificaToken, (req, res) => {
     })
         .then(unContacto => {
             if (unContacto) {
-                console.log('Un contacto ---',unContacto);
+                //console.log('Un contacto ---',unContacto);
                 res.status(200).json({
                     ok: 'true',
                     unContacto: unContacto
@@ -252,7 +252,7 @@ app.post('/', auth.verificaToken, (req, res) => {
 
     var body = req.body;
     var fecha = new Date();
-
+    
     Contacto.create({
         nombre: body.nombre,
         apellido: body.apellido,
