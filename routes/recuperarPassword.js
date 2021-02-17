@@ -22,12 +22,12 @@ app.post('/', (req, res) => {
 
            // console.log('Se está mandando el correo');
             var transporter = nodemailer.createTransport({
-                host: "smx10.hostdime.com.mx",
-                port: 587,
+                host: "mail.clicksoft.mx",
+                port: 993,
                 secure: false,
                 auth: {
-                    user: "josorio@cs.clicksoft.com.mx",
-                    pass: "Osorio.JJ.20"
+                    user: "pruebas@clicksoft.mx",
+                    pass: "pruebas.2021"
                 },
             })
 
@@ -41,7 +41,7 @@ app.post('/', (req, res) => {
                 text: 'Estás recibiendo este correo porque tú (o alguien más) ha solicitado restablecer la contraseña para tu cuenta.\n\n' +
                     'Por favor haz click en el siguiente enlace, o copia y pega en tu navegador para completar el proceso\n\n' +
                     'Dispone de una hora para realizar el cambio, pasada la hora deberá realizar una nueva solicitud de cambio de contraseña\n\n' +
-                    'http://192.168.49.15:8081/#/reset/' + token + '\n\n' +
+                    'http://192.168.49.15:8080/#/reset/' + token + '\n\n' +
                     'Nota: Si tu no lo solicitaste, por favor ignora este correo y la contraseña permanecerá sin cambios.\n'
             }
 

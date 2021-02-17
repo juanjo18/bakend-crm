@@ -215,12 +215,10 @@ app.get('/todasMisEmpresas/lista/:id', auth.verificaToken, (req, res) => {
 //  Create a new company
 // ==========================================
 app.post('/', auth.verificaToken, (req, res) => {
-    //console.log('backend');
+
     var body = req.body;
     var fecha = new Date();
     var fulldateTime = fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate()+' '+fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-    
-    //console.log(body);
 
     Empresa.create({
         nombre: body.nombre,

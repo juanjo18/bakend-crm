@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 const db = require('./config/database');
 db.authenticate()
   .then(() => {
-    console.log('Conectado');
+    console.log('Conectado a la base de datos');
     app.listen(3000,()=>{
     console.log('Express puerto 3000: \x1b[32m%s\x1b[0m',' online');
     });
